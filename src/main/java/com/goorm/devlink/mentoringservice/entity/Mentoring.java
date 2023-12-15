@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Mentoring {
+public class Mentoring extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
