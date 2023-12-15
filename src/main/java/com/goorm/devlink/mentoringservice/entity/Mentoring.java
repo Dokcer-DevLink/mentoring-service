@@ -1,23 +1,27 @@
 package com.goorm.devlink.mentoringservice.entity;
 
 
+import com.goorm.devlink.mentoringservice.vo.MentoringApplyRequest;
 import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mentoring {
 
     @Id
     @GeneratedValue
     Long id;
+    @Column(name = "mentoring_uuid")
+    private String mentoringUuid;
     @Column(name = "mentor_uuid")
     private String mentorUuid;
     @Column(name = "mentee_uuid")
@@ -32,6 +36,9 @@ public class Mentoring {
     private MentoringStatus status;
     @Column(name = "post_uuid")
     private String postUuid;
+    @Column(name = "on_offline")
+    private String onOffline;
+
 
 
 }

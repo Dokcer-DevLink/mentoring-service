@@ -9,9 +9,12 @@ import java.time.LocalDate;
 public class MentoringApplyRequest {
 
     private String postUuid;
+    private String targetUuid;
+    private TargetType targetType;
     private String mentoringPlace;
     private OnOffline onOffline;
     private LocalDate startTime;
     private LocalDate endTime;
+
 
 }
