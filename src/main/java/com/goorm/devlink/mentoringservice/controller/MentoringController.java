@@ -5,6 +5,7 @@ import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.vo.MentoringApplyRequest;
 import com.goorm.devlink.mentoringservice.vo.MentoringSimpleResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 public class MentoringController {
 
-    private MentoringService mentoringService;
+    private final MentoringService mentoringService;
 
     // 멘토링 신청
     @PostMapping("/api/mentoring")
@@ -25,7 +27,7 @@ public class MentoringController {
                                                                   @RequestHeader("userUuid") String userUuid){
         String mentoringUuid =
                 mentoringService.applyMentoring(MentoringApplyDto.getInstance(mentoringApplyRequest, userUuid));
-        return new ResponseEntity<>(MentoringSimpleResponse.getApplyInstance(mentoringUuid), HttpStatus.OK);
+        return new ResponseEntity<>(MentoringSimpleResponse.getApplyInstance(mentoringUuid), HttpStatus.CREATED);
 
     }
 

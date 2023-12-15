@@ -2,8 +2,7 @@ package com.goorm.devlink.mentoringservice.vo;
 
 
 import lombok.Getter;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class MentoringApplyRequest {
@@ -13,8 +12,8 @@ public class MentoringApplyRequest {
     private TargetType targetType;
     private String mentoringPlace;
     private OnOffline onOffline;
-    private LocalDate startTime;
-    private LocalDate endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
 
 }
