@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,6 +63,15 @@ public class MentoringController {
         MentoringDetailResponse mentoringDetailResponse = mentoringService.findMentoringDetail(mentoringUuid);
         return new ResponseEntity<>(mentoringDetailResponse,HttpStatus.OK);
     }
+
+    // 나의 멘토링 리스트 조회
+    @GetMapping("/api/mentoring/my")
+    public ResponseEntity<Slice<MentoringSimpleResponse>> getMyMentoringList(@RequestHeader("userUuid") String userUuid,
+                                                                             @RequestParam MentoringType mentoringType){
+        Slice<MentoringSimpleResponse> myMentoringList = mentoringService.findMyMentoringList(userUuid,mentoringType);
+        return new ResponseEntity<>(myMentoringList,HttpStatus.OK);
+    }
+
 
 
 }

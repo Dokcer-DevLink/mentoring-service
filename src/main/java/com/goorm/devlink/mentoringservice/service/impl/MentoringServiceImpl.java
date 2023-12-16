@@ -11,6 +11,7 @@ import com.goorm.devlink.mentoringservice.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
@@ -73,6 +74,15 @@ public class MentoringServiceImpl implements MentoringService {
         mentoringApplyRepository.save(mentoringApply);
         // 3. 멘토링 거절 알림 ( 추후 로직 구현 )
         return mentoringApply.getApplyUuid();
+    }
+
+    @Override
+    public Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid,MentoringType mentoringType) {
+        PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
+        Slice<Mentoring> mentoringSlice = (mentoringType.equals(MentoringType.MENTOR)) ?
+                mentoringRepository.findMyMentoringListByMentorUuid(userUuid) :
+                mentoringRepository.findMyMentoringListByMenteeUuid(userUuid);
+        return mentoringSlice.map(mentoring -> modelMapperUtil.convertToMentoringSimpleResponse(mentoring));
     }
 
 

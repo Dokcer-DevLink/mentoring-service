@@ -2,8 +2,8 @@ package com.goorm.devlink.mentoringservice.entity;
 
 
 import com.goorm.devlink.mentoringservice.vo.MentoringApplyStatus;
+import com.goorm.devlink.mentoringservice.vo.MentoringType;
 import com.goorm.devlink.mentoringservice.vo.OnOffline;
-import com.goorm.devlink.mentoringservice.vo.TargetType;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ public class MentoringApply extends BaseTimeEntity {
     private MentoringApplyStatus status;
     @Column(name = "target_type")
     @Enumerated(EnumType.STRING)
-    private TargetType targetType;
+    private MentoringType mentoringType;
     @Column(name = "on_offline")
     @Enumerated(EnumType.STRING)
     private OnOffline onOffline;
@@ -45,7 +45,6 @@ public class MentoringApply extends BaseTimeEntity {
     public void updateRejectStatus() {
         status = MentoringApplyStatus.REJECTED;
     }
-
     public void updateAcceptStatus(){
         status = MentoringApplyStatus.ACCEPT;
     }

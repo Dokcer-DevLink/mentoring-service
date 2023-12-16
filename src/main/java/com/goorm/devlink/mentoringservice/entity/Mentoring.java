@@ -3,7 +3,7 @@ package com.goorm.devlink.mentoringservice.entity;
 
 import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
 import com.goorm.devlink.mentoringservice.vo.OnOffline;
-import com.goorm.devlink.mentoringservice.vo.TargetType;
+import com.goorm.devlink.mentoringservice.vo.MentoringType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,7 +46,7 @@ public class Mentoring extends BaseTimeEntity{
         String mentorUuidValue = mentoringApply.getTargetUuid();
         String menteeUuidValue = mentoringApply.getFromUuid();
 
-        if(mentoringApply.getTargetType().equals(TargetType.MENTEE)){
+        if(mentoringApply.getMentoringType().equals(MentoringType.MENTEE)){
             mentorUuidValue = mentoringApply.getFromUuid();
             menteeUuidValue = mentoringApply.getTargetUuid();
         }

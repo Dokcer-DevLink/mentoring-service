@@ -1,10 +1,7 @@
 package com.goorm.devlink.mentoringservice.service;
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
-import com.goorm.devlink.mentoringservice.vo.ApplyPostResponse;
-import com.goorm.devlink.mentoringservice.vo.ApplyProfileResponse;
-import com.goorm.devlink.mentoringservice.vo.MentoringDetailResponse;
-import com.goorm.devlink.mentoringservice.vo.MentoringSimpleResponse;
+import com.goorm.devlink.mentoringservice.vo.*;
 import org.springframework.data.domain.Slice;
 
 import java.util.List;
@@ -22,4 +19,6 @@ public interface MentoringService {
     String doMentoringAcceptProcess(String applyUuid);
 
     String doMentoringRejectProcess(String applyUuid);
+
+    Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid, MentoringType mentoringType);
 }
