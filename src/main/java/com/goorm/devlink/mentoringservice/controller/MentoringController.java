@@ -4,8 +4,11 @@ package com.goorm.devlink.mentoringservice.controller;
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.vo.ApplyMessageResponse;
+import com.goorm.devlink.mentoringservice.vo.ApplyPostResponse;
+import com.goorm.devlink.mentoringservice.vo.ApplyProfileResponse;
 import com.goorm.devlink.mentoringservice.vo.MentoringApplyRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,7 @@ public class MentoringController {
     private final MentoringService mentoringService;
 
     // 멘토링 신청
-    @PostMapping("/api/mentoring")
+    @PostMapping("/api/mentoring/apply")
     public ResponseEntity<ApplyMessageResponse> applyMentoring(@RequestBody @Valid MentoringApplyRequest mentoringApplyRequest,
                                                                @RequestHeader("userUuid") String userUuid){
         String applyUuid =
@@ -29,19 +32,19 @@ public class MentoringController {
 
     }
 
-//    // 보낸 멘토링 제안 리스트 조회 ( Slice )
-//    @GetMapping("/api/mentoring/list")
-//    public ResponseEntity<List<MentoringSimpleResponse>> getApplyMentoringList(@RequestHeader("userUuid") String userUuid){
-//        List<MentoringSimpleResponse> applyMentoringList = mentoringService.findApplyMentoringList(userUuid);
-//        return null;
-//    }
-//
-//    // 받은 멘토링 제안 리스트 조회 ( Slice )
-//    @GetMapping("/api/mentoring/list")
-//    public ResponseEntity<List<MentoringSimpleResponse>> getApplyMentoringList(@RequestHeader("userUuid") String userUuid){
-//        List<MentoringSimpleResponse> applyMentoringList = mentoringService.findApplyMentoringList(userUuid);
-//        return null;
-//    }
+    // 보낸 멘토링 제안 리스트 조회 ( Slice )
+    @GetMapping("/api/mentoring/send")
+    public ResponseEntity<Slice<ApplyPostResponse>> getApplySendMentoringList(@RequestHeader("userUuid") String userUuid){
+        Slice<ApplyPostResponse> sendApplies = mentoringService.findApplySendMentoringList(userUuid);
+        return new ResponseEntity<>(sendApplies,HttpStatus.OK);
+    }
+
+    // 받은 멘토링 제안 리스트 조회 ( Slice )
+    @GetMapping("/api/mentoring/receive")
+    public ResponseEntity<Slice<ApplyProfileResponse>> getApplyMentoringList(@RequestHeader("userUuid") String userUuid){
+        Slice<ApplyProfileResponse> receiveApplies = mentoringService.findApplyReceiveMentoringList(userUuid);
+        return new ResponseEntity<>(receiveApplies,HttpStatus.OK);
+    }
 
 //    // 멘토링 상세 조회
 //    @GetMapping("/api/mentoring")
