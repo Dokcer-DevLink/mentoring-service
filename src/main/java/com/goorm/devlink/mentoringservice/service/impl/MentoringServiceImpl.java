@@ -1,22 +1,20 @@
 package com.goorm.devlink.mentoringservice.service.impl;
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
+import com.goorm.devlink.mentoringservice.entity.Mentoring;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.repository.MentoringApplyRepository;
 import com.goorm.devlink.mentoringservice.repository.MentoringRepository;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.ModelMapperUtil;
-import com.goorm.devlink.mentoringservice.vo.ApplyPostResponse;
-import com.goorm.devlink.mentoringservice.vo.ApplyProfileResponse;
-import com.goorm.devlink.mentoringservice.vo.MentoringDetailResponse;
-import com.goorm.devlink.mentoringservice.vo.MentoringSimpleResponse;
+import com.goorm.devlink.mentoringservice.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.util.List;
-
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -30,7 +28,7 @@ public class MentoringServiceImpl implements MentoringService {
     @Override
     public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
         MentoringApply mentoringApply = modelMapperUtil.convertToMentoringApply(mentoringApplyDto);
-        mentoringRepository.save(mentoringApply);
+        mentoringApplyRepository.save(mentoringApply);
         return mentoringApply.getApplyUuid();
     }
 
@@ -57,13 +55,17 @@ public class MentoringServiceImpl implements MentoringService {
     }
 
     @Override
-    public String doMentoringAcceptProcess(String mentoringUuid) {
+    public String doMentoringAcceptProcess(String applyUuid) {
+        MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
+                .orElseThrow( () -> { throw new NoSuchElementException(); }); // 1. Mentoring Apply 조회
+        mentoringApply.setStatus(MentoringApplyStatus.ACCEPT); // 2. Mentoring Apply Status로 변경
+        Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
+        mentoringRepository.save(mentoring);
+        // 4. 멘토링 생성 알림 ( 추후 로직 구현 )
 
-        // 1. Mentoring Apply Status로 변경하기
-
-        // 2. Mentoring 생성하기
-        return null;
+        return mentoring.getMentoringUuid();
     }
+
 
 
 }

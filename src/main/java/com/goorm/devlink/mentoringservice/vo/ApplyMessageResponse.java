@@ -9,10 +9,10 @@ public class ApplyMessageResponse {
     private String applyUuid;
     private String message;
 
-    public static ApplyMessageResponse getApplyInstance(String applyUuid){
+    public static ApplyMessageResponse getInstance(String applyUuid, String message){
         return ApplyMessageResponse.builder()
                 .applyUuid(applyUuid)
-                .message("멘토링 신청이 완료되었습니다.")
+                .message(message)
                 .build();
     }
 }

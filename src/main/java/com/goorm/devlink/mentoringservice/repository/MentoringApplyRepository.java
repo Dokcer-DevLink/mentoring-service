@@ -10,4 +10,5 @@ public interface MentoringApplyRepository extends JpaRepository<MentoringApply,L
     Slice<MentoringApply> findMentoringAppliesByFromUuid(String userUuid, Pageable pageable);
 
     Slice<MentoringApply> findMentoringAppliesByTargetUuid(String userUuid, Pageable pageable);
+    MentoringApply findMentoringApplyByApplyUuid(String applyUuid);
 }

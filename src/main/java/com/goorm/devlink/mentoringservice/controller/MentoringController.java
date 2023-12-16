@@ -3,10 +3,7 @@ package com.goorm.devlink.mentoringservice.controller;
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
-import com.goorm.devlink.mentoringservice.vo.ApplyMessageResponse;
-import com.goorm.devlink.mentoringservice.vo.ApplyPostResponse;
-import com.goorm.devlink.mentoringservice.vo.ApplyProfileResponse;
-import com.goorm.devlink.mentoringservice.vo.MentoringApplyRequest;
+import com.goorm.devlink.mentoringservice.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
@@ -28,7 +25,8 @@ public class MentoringController {
                                                                @RequestHeader("userUuid") String userUuid){
         String applyUuid =
                 mentoringService.applyMentoring(MentoringApplyDto.getInstance(mentoringApplyRequest, userUuid));
-        return new ResponseEntity<>(ApplyMessageResponse.getApplyInstance(applyUuid), HttpStatus.OK);
+        return new ResponseEntity<>(ApplyMessageResponse.getInstance(applyUuid,"멘토링 신청이 완료되었습니다."),
+                HttpStatus.OK);
 
     }
 
@@ -47,9 +45,10 @@ public class MentoringController {
     }
 
     @GetMapping("/api/mentoring/accept")
-    public ResponseEntity<ApplyMessageResponse> doMentoringAcceptProcess(@RequestParam String mentoringUuid){
-//        String mentoringUuid = mentoringService.doMentoringAcceptProcess(mentoringUuid);
-        return null;
+    public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestParam String applyUuid){
+        String mentoringUuid = mentoringService.doMentoringAcceptProcess(applyUuid);
+        return new ResponseEntity<>(MentoringMessageResponse.getInstance(mentoringUuid,"멘토링 생성이 완료되었습니다."),
+                HttpStatus.OK);
     }
 
 //    // 멘토링 상세 조회
