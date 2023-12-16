@@ -11,6 +11,12 @@ public class MessageUtil {
 
     private final MessageSource messageSource;
 
+    public String getApplyCompleteMessage(){ return getMessage("response.apply.complete"); }
+
+    public String getMentoringCreateMessage(){ return getMessage("response.mentoring.create");}
+
+    public String getMentoringRejectMessage() { return getMessage("response.mentoring.reject");}
+
     public String getUserUuidEmptyMessage() {
         return getMessage("request.empty.userUuid");
     }

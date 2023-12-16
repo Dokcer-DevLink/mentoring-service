@@ -3,7 +3,7 @@ spring:
   application:
     name: mentoring-service
   messages:
-    basename: errors
+    basename: messages, errors
   datasource:
     url: jdbc:mysql://localhost:3306/devlink-database
     username: devlink-user

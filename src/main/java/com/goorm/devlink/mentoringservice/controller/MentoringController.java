@@ -28,7 +28,7 @@ public class MentoringController {
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         String applyUuid =
                 mentoringService.applyMentoring(MentoringApplyDto.getInstance(mentoringApplyRequest, userUuid));
-        return new ResponseEntity<>(ApplyMessageResponse.getInstance(applyUuid,"멘토링 신청이 완료되었습니다."),
+        return new ResponseEntity<>(ApplyMessageResponse.getInstance(applyUuid,messageUtil.getApplyCompleteMessage()),
                 HttpStatus.OK);
 
     }
@@ -49,20 +49,22 @@ public class MentoringController {
         return new ResponseEntity<>(receiveApplies,HttpStatus.OK);
     }
 
+    // 멘토린 신청 수락
     @GetMapping("/api/mentoring/accept")
     public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
         String mentoringUuid = mentoringService.doMentoringAcceptProcess(applyUuid);
-        return new ResponseEntity<>(MentoringMessageResponse.getInstance(mentoringUuid,"멘토링 생성이 완료되었습니다."),
-                HttpStatus.OK);
+        return new ResponseEntity<>(MentoringMessageResponse.getInstance(mentoringUuid,
+                messageUtil.getMentoringCreateMessage()), HttpStatus.OK);
     }
 
+    // 멘토링 신청 거절
     @GetMapping("/api/mentoring/reject")
     public ResponseEntity<ApplyMessageResponse> doMentoringRejectProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
         String rejectUuid = mentoringService.doMentoringRejectProcess(applyUuid);
-        return new ResponseEntity<>(ApplyMessageResponse.getInstance(rejectUuid,"멘토링이 거절되었습니다."),
-                HttpStatus.OK);
+        return new ResponseEntity<>(ApplyMessageResponse.getInstance(rejectUuid,
+                messageUtil.getMentoringRejectMessage()), HttpStatus.OK);
     }
 
     // 멘토링 상세 조회
