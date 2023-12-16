@@ -21,4 +21,5 @@ public interface MentoringService {
 
     String doMentoringAcceptProcess(String applyUuid);
 
+    String doMentoringRejectProcess(String applyUuid);
 }

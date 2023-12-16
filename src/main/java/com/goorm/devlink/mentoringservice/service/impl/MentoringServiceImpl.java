@@ -58,7 +58,7 @@ public class MentoringServiceImpl implements MentoringService {
     public String doMentoringAcceptProcess(String applyUuid) {
         MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
                 .orElseThrow( () -> { throw new NoSuchElementException(); }); // 1. Mentoring Apply 조회
-        mentoringApply.setStatus(MentoringApplyStatus.ACCEPT); // 2. Mentoring Apply Status로 변경
+        mentoringApply.updateAcceptStatus(); // 2. Mentoring Apply Accept로 상태 변경
         Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
         mentoringRepository.save(mentoring);
         // 4. 멘토링 생성 알림 ( 추후 로직 구현 )
@@ -66,6 +66,15 @@ public class MentoringServiceImpl implements MentoringService {
         return mentoring.getMentoringUuid();
     }
 
+    @Override
+    public String doMentoringRejectProcess(String applyUuid) {
+        MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
+                .orElseThrow( () -> { throw new NoSuchElementException(); }); // 1. Mentoring Apply 조회
+        mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
+        mentoringApplyRepository.save(mentoringApply);
+        // 3. 멘토링 거절 알림 ( 추후 로직 구현 )
+        return mentoringApply.getApplyUuid();
+    }
 
 
 }

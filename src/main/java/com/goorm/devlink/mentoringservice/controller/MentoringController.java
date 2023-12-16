@@ -51,6 +51,13 @@ public class MentoringController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/api/mentoring/reject")
+    public ResponseEntity<ApplyMessageResponse> doMentoringRejectProcess(@RequestParam String applyUuid){
+        String rejectUuid = mentoringService.doMentoringRejectProcess(applyUuid);
+        return new ResponseEntity<>(ApplyMessageResponse.getInstance(rejectUuid,"멘토링이 거절되었습니다."),
+                HttpStatus.OK);
+    }
+
 //    // 멘토링 상세 조회
 //    @GetMapping("/api/mentoring")
 //    public ResponseEntity<MentoringDetailResponse> getMentoringDetail(@RequestParam String mentoringUuid){

@@ -42,5 +42,11 @@ public class MentoringApply extends BaseTimeEntity {
     private OnOffline onOffline;
 
 
+    public void updateRejectStatus() {
+        status = MentoringApplyStatus.REJECTED;
+    }
 
+    public void updateAcceptStatus(){
+        status = MentoringApplyStatus.ACCEPT;
+    }
 }
