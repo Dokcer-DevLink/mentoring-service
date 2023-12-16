@@ -34,10 +34,9 @@ public class MentoringServiceImpl implements MentoringService {
 
     @Override
     public MentoringDetailResponse findMentoringDetail(String mentoringUuid) {
-//        MentoringApply mentoringApply = Optional.ofNullable(mentoringRepository.findMentoringByMentoringUuid(mentoringUuid))
-//                .orElseThrow(() -> { throw new NoSuchElementException(); });
-//        return modelMapperUtil.convertToMentoringDetailResponse(mentoringApply);
-        return null;
+        Mentoring mentoring = Optional.ofNullable(mentoringRepository.findMentoringByMentoringUuid(mentoringUuid))
+                .orElseThrow(() -> { throw new NoSuchElementException(); });
+        return modelMapperUtil.convertToMentoringDetailResponse(mentoring);
     }
 
     @Override

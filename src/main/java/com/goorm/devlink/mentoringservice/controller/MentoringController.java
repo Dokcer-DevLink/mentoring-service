@@ -58,13 +58,12 @@ public class MentoringController {
                 HttpStatus.OK);
     }
 
-//    // 멘토링 상세 조회
-//    @GetMapping("/api/mentoring")
-//    public ResponseEntity<MentoringDetailResponse> getMentoringDetail(@RequestParam String mentoringUuid){
-//        MentoringDetailResponse mentoringDetailResponse = mentoringService.findMentoringDetail(mentoringUuid);
-//        // 서비스간 통신으로 멘토 멘티 프로파일 정보 가져오는 로직 필요
-//        return new ResponseEntity<>(mentoringDetailResponse,HttpStatus.OK);
-//    }
+    // 멘토링 상세 조회
+    @GetMapping("/api/mentoring")
+    public ResponseEntity<MentoringDetailResponse> getMentoringDetail(@RequestParam String mentoringUuid){
+        MentoringDetailResponse mentoringDetailResponse = mentoringService.findMentoringDetail(mentoringUuid);
+        return new ResponseEntity<>(mentoringDetailResponse,HttpStatus.OK);
+    }
 
 
 }

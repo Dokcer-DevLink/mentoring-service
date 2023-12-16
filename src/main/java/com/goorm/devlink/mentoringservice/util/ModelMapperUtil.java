@@ -2,6 +2,7 @@ package com.goorm.devlink.mentoringservice.util;
 
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
+import com.goorm.devlink.mentoringservice.entity.Mentoring;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.vo.MentoringDetailResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,9 @@ public class ModelMapperUtil {
         return modelMapper.map(mentoringApplyDto, MentoringApply.class);
     }
 
-    public MentoringDetailResponse convertToMentoringDetailResponse(MentoringApply mentoringApply){
+    public MentoringDetailResponse convertToMentoringDetailResponse(Mentoring mentoring){
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper.map(mentoringApply, MentoringDetailResponse.class);
+        return modelMapper.map(mentoring, MentoringDetailResponse.class);
     }
 
 

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MentoringRepository extends JpaRepository<Mentoring,Long>, MentoringRepositoryCustom {
 
 
-//    MentoringApply findMentoringByMentoringUuid(String mentoringUuid);
+    Mentoring findMentoringByMentoringUuid(String mentoringUuid);
 }

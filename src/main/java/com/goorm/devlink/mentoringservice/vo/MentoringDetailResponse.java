@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 public class MentoringDetailResponse {
 
     private String mentoringUuid;
-    private Profile mentorProfile;
-    private Profile menteeProfile;
+    private String mentorUuid;
+    private String menteeUuid;
     private String mentoringPlace;
     private String postUuid;
     private OnOffline onOffline;
-    private MentoringApplyStatus status;
+    private MentoringStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
