@@ -6,12 +6,12 @@ import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.repository.MentoringApplyRepository;
 import com.goorm.devlink.mentoringservice.repository.MentoringRepository;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
+import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.util.ModelMapperUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
@@ -25,6 +25,7 @@ public class MentoringServiceImpl implements MentoringService {
     private final ModelMapperUtil modelMapperUtil;
     private final MentoringRepository mentoringRepository;
     private final MentoringApplyRepository mentoringApplyRepository;
+    private final MessageUtil messageUtil;
 
     @Override
     public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
@@ -36,7 +37,8 @@ public class MentoringServiceImpl implements MentoringService {
     @Override
     public MentoringDetailResponse findMentoringDetail(String mentoringUuid) {
         Mentoring mentoring = Optional.ofNullable(mentoringRepository.findMentoringByMentoringUuid(mentoringUuid))
-                .orElseThrow(() -> { throw new NoSuchElementException(); });
+                .orElseThrow(() -> {
+                    throw new NoSuchElementException(messageUtil.getMentoringUuidNoSuchMessage(mentoringUuid)); });
         return modelMapperUtil.convertToMentoringDetailResponse(mentoring);
     }
 
@@ -57,7 +59,8 @@ public class MentoringServiceImpl implements MentoringService {
     @Override
     public String doMentoringAcceptProcess(String applyUuid) {
         MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
-                .orElseThrow( () -> { throw new NoSuchElementException(); }); // 1. Mentoring Apply 조회
+                .orElseThrow( () -> {
+                    throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); }); // 1. Mentoring Apply 조회
         mentoringApply.updateAcceptStatus(); // 2. Mentoring Apply Accept로 상태 변경
         Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
         mentoringRepository.save(mentoring);
@@ -69,7 +72,8 @@ public class MentoringServiceImpl implements MentoringService {
     @Override
     public String doMentoringRejectProcess(String applyUuid) {
         MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
-                .orElseThrow( () -> { throw new NoSuchElementException(); }); // 1. Mentoring Apply 조회
+                .orElseThrow( () -> {
+                    throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); }); // 1. Mentoring Apply 조회
         mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
         mentoringApplyRepository.save(mentoringApply);
         // 3. 멘토링 거절 알림 ( 추후 로직 구현 )
@@ -80,7 +84,7 @@ public class MentoringServiceImpl implements MentoringService {
     public Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid,MentoringType mentoringType) {
         PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
         Slice<Mentoring> mentoringSlice = (mentoringType.equals(MentoringType.MENTOR)) ?
-                mentoringRepository.findMyMentoringListByMentorUuid(userUuid) :
+                mentoringRepository.findMyMentoringListByMentorUuid(userUuid):
                 mentoringRepository.findMyMentoringListByMenteeUuid(userUuid);
         return mentoringSlice.map(mentoring -> modelMapperUtil.convertToMentoringSimpleResponse(mentoring));
     }
