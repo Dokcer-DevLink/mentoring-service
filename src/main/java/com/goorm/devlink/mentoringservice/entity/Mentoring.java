@@ -46,7 +46,7 @@ public class Mentoring extends BaseTimeEntity{
         String mentorUuidValue = mentoringApply.getTargetUuid();
         String menteeUuidValue = mentoringApply.getFromUuid();
 
-        if(mentoringApply.getMentoringType().equals(MentoringType.MENTEE)){
+        if(mentoringApply.getTargetType().equals(MentoringType.MENTEE)){
             mentorUuidValue = mentoringApply.getFromUuid();
             menteeUuidValue = mentoringApply.getTargetUuid();
         }

@@ -9,7 +9,7 @@ public class MentoringApplyRequest {
 
     private String postUuid;
     private String targetUuid;
-    private MentoringType mentoringType;
+    private MentoringType targetType;
     private String mentoringPlace;
     private OnOffline onOffline;
     private LocalDateTime startTime;

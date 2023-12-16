@@ -17,7 +17,7 @@ public class MentoringApplyDto {
     private String applyUuid;
     private String fromUuid;
     private String targetUuid;
-    private MentoringType mentoringType;
+    private MentoringType targetType;
     private String postUuid;
     private String mentoringPlace;
     private OnOffline onOffline;
@@ -33,7 +33,7 @@ public class MentoringApplyDto {
                 .onOffline(mentoringApplyRequest.getOnOffline())
                 .startTime(mentoringApplyRequest.getStartTime())
                 .endTime(mentoringApplyRequest.getEndTime())
-                .mentoringType(mentoringApplyRequest.getMentoringType())
+                .targetType(mentoringApplyRequest.getTargetType())
                 .status(MentoringApplyStatus.WAITING)
                 .fromUuid(userUuid)
                 .targetUuid(mentoringApplyRequest.getTargetUuid())

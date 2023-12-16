@@ -36,7 +36,7 @@ public class MentoringApply extends BaseTimeEntity {
     private MentoringApplyStatus status;
     @Column(name = "target_type")
     @Enumerated(EnumType.STRING)
-    private MentoringType mentoringType;
+    private MentoringType targetType;
     @Column(name = "on_offline")
     @Enumerated(EnumType.STRING)
     private OnOffline onOffline;
