@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Mentoring extends BaseTimeEntity {
+public class MentoringApply extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
     Long id;
-    @Column(name = "mentoring_uuid")
-    private String mentoringUuid;
-    @Column(name = "mentor_uuid")
-    private String mentorUuid;
-    @Column(name = "mentee_uuid")
-    private String menteeUuid;
+    @Column(name = "apply_uuid", unique=true)
+    private String applyUuid;
+    @Column(name = "from_uuid")
+    private String fromUuid;
+    @Column(name = "target_uuid")
+    private String targetUuid;
     @Column(name = "start_time")
     private LocalDateTime startTime;
     @Column(name = "end_time")

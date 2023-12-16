@@ -1,10 +1,10 @@
 package com.goorm.devlink.mentoringservice.repository;
 
-import com.goorm.devlink.mentoringservice.entity.Mentoring;
+import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MentoringRepository extends JpaRepository<Mentoring,Long>, MentoringRepositoryCustom {
+public interface MentoringRepository extends JpaRepository<MentoringApply,Long>, MentoringRepositoryCustom {
 
 
-    Mentoring findMentoringByMentoringUuid(String mentoringUuid);
+//    MentoringApply findMentoringByMentoringUuid(String mentoringUuid);
 }
