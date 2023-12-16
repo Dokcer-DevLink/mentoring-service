@@ -15,7 +15,7 @@ public class MentoringDetailResponse {
     private String mentoringPlace;
     private String postUuid;
     private OnOffline onOffline;
-    private MentoringStatus status;
+    private MentoringApplyStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 

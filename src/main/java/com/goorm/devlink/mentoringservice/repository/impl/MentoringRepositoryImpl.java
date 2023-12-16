@@ -2,7 +2,7 @@ package com.goorm.devlink.mentoringservice.repository.impl;
 
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.repository.MentoringRepositoryCustom;
-import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
+import com.goorm.devlink.mentoringservice.vo.MentoringApplyStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Slice;
 
@@ -19,7 +19,7 @@ public class MentoringRepositoryImpl implements MentoringRepositoryCustom {
     }
 
     @Override
-    public Slice<MentoringApply> findMentoringListByUserUuidAndStatus(String userUuid, MentoringStatus mentoringStatus) {
+    public Slice<MentoringApply> findMentoringListByUserUuidAndStatus(String userUuid, MentoringApplyStatus mentoringApplyStatus) {
         return null;
     }
 }

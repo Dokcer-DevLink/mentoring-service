@@ -56,5 +56,14 @@ public class MentoringServiceImpl implements MentoringService {
         return mentoringApplies.map(mentoringApply -> ApplyProfileResponse.getInstance(mentoringApply.getFromUuid()));
     }
 
+    @Override
+    public String doMentoringAcceptProcess(String mentoringUuid) {
+
+        // 1. Mentoring Apply Status로 변경하기
+
+        // 2. Mentoring 생성하기
+        return null;
+    }
+
 
 }

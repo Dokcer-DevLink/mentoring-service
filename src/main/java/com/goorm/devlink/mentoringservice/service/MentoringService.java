@@ -18,4 +18,7 @@ public interface MentoringService {
     Slice<ApplyPostResponse> findApplySendMentoringList(String userUuid);
 
     Slice<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid);
+
+    String doMentoringAcceptProcess(String mentoringUuid);
+
 }

@@ -1,6 +1,5 @@
 package com.goorm.devlink.mentoringservice.vo;
 
-import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,8 +2,9 @@ package com.goorm.devlink.mentoringservice.dto;
 
 
 import com.goorm.devlink.mentoringservice.vo.MentoringApplyRequest;
-import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
+import com.goorm.devlink.mentoringservice.vo.MentoringApplyStatus;
 import com.goorm.devlink.mentoringservice.vo.OnOffline;
+import com.goorm.devlink.mentoringservice.vo.TargetType;
 import lombok.Builder;
 import lombok.Getter;
 import java.time.LocalDateTime;
@@ -16,12 +17,13 @@ public class MentoringApplyDto {
     private String applyUuid;
     private String fromUuid;
     private String targetUuid;
+    private TargetType targetType;
     private String postUuid;
     private String mentoringPlace;
     private OnOffline onOffline;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private MentoringStatus status;
+    private MentoringApplyStatus status;
 
     public static MentoringApplyDto getInstance(MentoringApplyRequest mentoringApplyRequest, String userUuid){
 
@@ -31,7 +33,8 @@ public class MentoringApplyDto {
                 .onOffline(mentoringApplyRequest.getOnOffline())
                 .startTime(mentoringApplyRequest.getStartTime())
                 .endTime(mentoringApplyRequest.getEndTime())
-                .status(MentoringStatus.WAITING)
+                .targetType(mentoringApplyRequest.getTargetType())
+                .status(MentoringApplyStatus.WAITING)
                 .fromUuid(userUuid)
                 .targetUuid(mentoringApplyRequest.getTargetUuid())
                 .applyUuid(UUID.randomUUID().toString())

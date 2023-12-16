@@ -1,8 +1,9 @@
 package com.goorm.devlink.mentoringservice.entity;
 
 
-import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
+import com.goorm.devlink.mentoringservice.vo.MentoringApplyStatus;
 import com.goorm.devlink.mentoringservice.vo.OnOffline;
+import com.goorm.devlink.mentoringservice.vo.TargetType;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,11 +29,14 @@ public class MentoringApply extends BaseTimeEntity {
     private LocalDateTime endTime;
     @Column(name = "mentoring_place")
     private String mentoringPlace;
-    @Column(name ="status")
-    @Enumerated(EnumType.STRING)
-    private MentoringStatus status;
     @Column(name = "post_uuid")
     private String postUuid;
+    @Column(name ="status")
+    @Enumerated(EnumType.STRING)
+    private MentoringApplyStatus status;
+    @Column(name = "target_type")
+    @Enumerated(EnumType.STRING)
+    private TargetType targetType;
     @Column(name = "on_offline")
     @Enumerated(EnumType.STRING)
     private OnOffline onOffline;

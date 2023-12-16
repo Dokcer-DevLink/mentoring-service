@@ -46,6 +46,12 @@ public class MentoringController {
         return new ResponseEntity<>(receiveApplies,HttpStatus.OK);
     }
 
+    @GetMapping("/api/mentoring/accept")
+    public ResponseEntity<ApplyMessageResponse> doMentoringAcceptProcess(@RequestParam String mentoringUuid){
+//        String mentoringUuid = mentoringService.doMentoringAcceptProcess(mentoringUuid);
+        return null;
+    }
+
 //    // 멘토링 상세 조회
 //    @GetMapping("/api/mentoring")
 //    public ResponseEntity<MentoringDetailResponse> getMentoringDetail(@RequestParam String mentoringUuid){
