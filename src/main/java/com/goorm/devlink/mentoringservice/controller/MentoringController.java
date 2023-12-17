@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MentoringController {
 
     private final MentoringService mentoringService;
@@ -91,17 +91,10 @@ public class MentoringController {
     // 레코드 기록 추가하기
     @PostMapping("/api/mentoring/record")
     public String getRecordSummary(@RequestBody RecordRequest recordRequest ) {
-//            String imgFile = "/Users/kangmingu/Desktop/Goorm_Project/mentoring-service/devlink_test.m4a";
-//            File requestFile = new File(imgFile);
-//            byte[] originBytes = new byte[0];
-//            try {
-//                originBytes = Files.readAllBytes(requestFile.toPath());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            String encoding = Base64.getEncoder().encodeToString(originBytes);
             NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClova.STT);
-            return naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
+            String content = naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
+            naverClovaApi = naverClovaFactory.getInstance(NaverClova.SUMMARY);
+            return naverClovaApi.sendDataToNaverClova(content);
     }
 
 

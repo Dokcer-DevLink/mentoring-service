@@ -13,19 +13,25 @@ import java.net.HttpURLConnection;
 public class NaverStt implements NaverClovaApi {
 
     private final HttpConnectionUtil httpConnectionUtil;
-    private final NaverApiConfigVo naverClovaApiConfigVo;
+    private final NaverApiConfigVo naverApiConfigVo;
     @Override
     public String sendDataToNaverClova(String encoding) {
         System.out.println("============ NaverStt ================");
-        HttpURLConnection conn = httpConnectionUtil.getHttpUrlConnection(naverClovaApiConfigVo.getStt().getUrl(),
-                naverClovaApiConfigVo.getStt().getContentType(),
-                naverClovaApiConfigVo.getClientId(),
-                naverClovaApiConfigVo.getClientSecret()
+        HttpURLConnection conn = httpConnectionUtil.getHttpUrlConnection(naverApiConfigVo.getStt().getUrl(),
+                naverApiConfigVo.getStt().getContentType(),
+                naverApiConfigVo.getClientId(),
+                naverApiConfigVo.getClientSecret()
         );
 
-        File voiceFile = httpConnectionUtil.convertEncodingToFile(encoding,naverClovaApiConfigVo.getStt().getFileUrl());
+        File voiceFile = httpConnectionUtil.convertEncodingToFile(encoding, naverApiConfigVo.getStt().getFileUrl());
         httpConnectionUtil.sendFileToServer(conn,voiceFile);
-        return httpConnectionUtil.receiveResponseFromServer(conn);
+        return extractContent(httpConnectionUtil.receiveResponseFromServer(conn));
 
+    }
+
+    private String extractContent(String response){
+        String replace1 = response.replace("{\"text\":\"", "");
+        String replace2 = replace1.replace("\"}", "");
+        return replace2;
     }
 }

@@ -34,6 +34,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation group: 'org.json', name: 'json', version: '20230227'
+
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 
 	compileOnly 'org.projectlombok:lombok'

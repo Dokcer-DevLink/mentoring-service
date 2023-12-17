@@ -2,6 +2,7 @@ package com.goorm.devlink.mentoringservice.util;
 
 
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,6 +23,16 @@ public class HttpConnectionUtil {
             }
             outputStream.flush();
             inputStream.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void sendJsonToServer(HttpURLConnection conn, JSONObject jsonObject ){
+        try {
+            OutputStream outputStream = conn.getOutputStream();
+            byte[] input = jsonObject.toString().getBytes("utf-8");
+            outputStream.write(input,0,input.length);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -53,6 +64,7 @@ public class HttpConnectionUtil {
             System.out.println(e);
         }
 
+        conn.disconnect();
         return response.toString();
     }
     public File convertEncodingToFile(String encoding, String fileUrl){
@@ -74,6 +86,7 @@ public class HttpConnectionUtil {
             conn.setUseCaches(false);
             conn.setDoOutput(true);
             conn.setDoInput(true);
+            conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", contentType);
             conn.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
             conn.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
