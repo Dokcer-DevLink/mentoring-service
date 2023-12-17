@@ -2,6 +2,9 @@ package com.goorm.devlink.mentoringservice.controller;
 
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
+import com.goorm.devlink.mentoringservice.record.NaverClova;
+import com.goorm.devlink.mentoringservice.record.NaverClovaApi;
+import com.goorm.devlink.mentoringservice.record.NaverClovaFactory;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
@@ -10,16 +13,17 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class MentoringController {
 
     private final MentoringService mentoringService;
     private final MessageUtil messageUtil;
+    private final NaverClovaFactory naverClovaFactory;
 
     // 멘토링 신청
     @PostMapping("/api/mentoring/apply")
@@ -84,6 +88,27 @@ public class MentoringController {
         return new ResponseEntity<>(myMentoringList,HttpStatus.OK);
     }
 
+    // 레코드 기록 추가하기
+    @PostMapping("/api/mentoring/record")
+    public String getRecordSummary(@RequestBody RecordRequest recordRequest ) {
+//            String imgFile = "/Users/kangmingu/Desktop/Goorm_Project/mentoring-service/devlink_test.m4a";
+//            File requestFile = new File(imgFile);
+//            byte[] originBytes = new byte[0];
+//            try {
+//                originBytes = Files.readAllBytes(requestFile.toPath());
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            String encoding = Base64.getEncoder().encodeToString(originBytes);
+            NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClova.STT);
+            return naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
+    }
 
 
 }
+
+
+
+
+
+

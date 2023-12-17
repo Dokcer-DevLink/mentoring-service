@@ -24,3 +24,19 @@ spring:
     show-sql: true
     generate-ddl: true
 
+
+data:
+  naverapi:
+    clientId: c00jkdw2jc
+    clientSecret: LOl7mvbbp7AtkwW79x0mBXCcYIAiX1ETwkSWlGXh
+    stt:
+      url: https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor
+      contentType: application/octet-stream
+      fileUrl: /Users/kangmingu/Desktop/Goorm_Project/mentoring-service/RecordFile
+    summary:
+      url: https://naveropenapi.apigw.ntruss.com/text-summary/v1/summarize
+      contentType: application/json
+
+
+
+
