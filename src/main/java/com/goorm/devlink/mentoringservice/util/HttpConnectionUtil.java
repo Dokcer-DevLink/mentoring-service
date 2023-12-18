@@ -30,9 +30,11 @@ public class HttpConnectionUtil {
 
     public void sendJsonToServer(HttpURLConnection conn, JSONObject jsonObject ){
         try {
-            OutputStream outputStream = conn.getOutputStream();
-            byte[] input = jsonObject.toString().getBytes("utf-8");
-            outputStream.write(input,0,input.length);
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(),"UTF-8");
+//            byte[] input = jsonObject.toString().getBytes("utf-8");
+            writer.write(jsonObject.toString());
+            writer.flush();
+            writer.close();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -43,10 +45,12 @@ public class HttpConnectionUtil {
         StringBuffer response = new StringBuffer();
         try {
             int responseCode = conn.getResponseCode();
+
+
             if(responseCode == 200) { // 정상 호출
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             } else {  // 오류 발생
-                System.out.println("error!!!!!!! responseCode= " + responseCode);
+                System.out.println("error!!!!!!! responseCode= " + responseCode + " responseMessage : " + conn.getResponseMessage());
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             }
             String inputLine;
@@ -86,6 +90,7 @@ public class HttpConnectionUtil {
             conn.setUseCaches(false);
             conn.setDoOutput(true);
             conn.setDoInput(true);
+            conn.setConnectTimeout(1000*60*5);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", contentType);
             conn.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);

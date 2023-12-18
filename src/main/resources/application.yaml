@@ -9,6 +9,7 @@ spring:
     username: devlink-user
     password: devlink-user
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   h2:
     console:
       enabled: true
@@ -27,12 +28,12 @@ spring:
 
 data:
   naverapi:
-    clientId: c00jkdw2jc
-    clientSecret: LOl7mvbbp7AtkwW79x0mBXCcYIAiX1ETwkSWlGXh
+    clientId:
+    clientSecret:
     stt:
       url: https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor
       contentType: application/octet-stream
-      fileUrl: /Users/kangmingu/Desktop/Goorm_Project/mentoring-service/RecordFile
+      fileUrl: /Users/kangmingu/Desktop/Goorm_Project/mentoring-service/RecordFile.mp3
     summary:
       url: https://naveropenapi.apigw.ntruss.com/text-summary/v1/summarize
       contentType: application/json
