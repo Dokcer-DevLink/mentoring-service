@@ -1,6 +1,8 @@
 package com.goorm.devlink.mentoringservice.service.impl;
 
+import com.goorm.devlink.mentoringservice.config.properties.vo.KafkaConfigVo;
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
+import com.goorm.devlink.mentoringservice.dto.NotifyDto;
 import com.goorm.devlink.mentoringservice.entity.Mentoring;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.repository.MentoringApplyRepository;
@@ -13,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 
 @Service
@@ -26,11 +30,14 @@ public class MentoringServiceImpl implements MentoringService {
     private final MentoringRepository mentoringRepository;
     private final MentoringApplyRepository mentoringApplyRepository;
     private final MessageUtil messageUtil;
+    private final KafkaTemplate<String, NotifyDto> kafkaTemplate;
+    private final KafkaConfigVo kafkaConfigVo;
 
     @Override
     public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
         MentoringApply mentoringApply = modelMapperUtil.convertToMentoringApply(mentoringApplyDto);
         mentoringApplyRepository.save(mentoringApply);
+        publishMessageToKafkaTopic(NotifyDto.getInstance(mentoringApply, NotifyDto.NotifyType.MENTORING_APPLY));
         return mentoringApply.getApplyUuid();
     }
 
@@ -64,7 +71,7 @@ public class MentoringServiceImpl implements MentoringService {
         mentoringApply.updateAcceptStatus(); // 2. Mentoring Apply Accept로 상태 변경
         Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
         mentoringRepository.save(mentoring);
-        // 4. 멘토링 생성 알림 ( 추후 로직 구현 )
+        publishMessageToKafkaTopic(NotifyDto.getInstance(mentoringApply, NotifyDto.NotifyType.MENTORING_ACCEPT));
 
         return mentoring.getMentoringUuid();
     }
@@ -76,7 +83,7 @@ public class MentoringServiceImpl implements MentoringService {
                     throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); }); // 1. Mentoring Apply 조회
         mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
         mentoringApplyRepository.save(mentoringApply);
-        // 3. 멘토링 거절 알림 ( 추후 로직 구현 )
+        publishMessageToKafkaTopic(NotifyDto.getInstance(mentoringApply, NotifyDto.NotifyType.MENTORING_REJECT));
         return mentoringApply.getApplyUuid();
     }
 
@@ -89,5 +96,11 @@ public class MentoringServiceImpl implements MentoringService {
         return mentoringSlice.map(mentoring -> modelMapperUtil.convertToMentoringSimpleResponse(mentoring));
     }
 
-
+    private void publishMessageToKafkaTopic(NotifyDto notifyDto){
+        try {
+            kafkaTemplate.send(kafkaConfigVo.getTopicName(),notifyDto).get();
+        }
+        catch (InterruptedException e) { throw new RuntimeException(e);}
+        catch (ExecutionException e) { throw new RuntimeException(e); }
+    }
 }

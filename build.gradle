@@ -35,6 +35,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation group: 'org.json', name: 'json', version: '20230227'
+	implementation 'org.springframework.kafka:spring-kafka'
 
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 

@@ -27,6 +27,10 @@ spring:
 
 
 data:
+  kafka:
+    topicName: kafka-mentoring
+    bootstrapServerUrl: localhost:9092
+    groupId: mentoring
   naverapi:
     clientId:
     clientSecret:
