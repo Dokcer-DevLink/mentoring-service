@@ -30,7 +30,7 @@ data:
   kafka:
     topicName: kafka-mentoring
     bootstrapServerUrl: localhost:9092
-    groupId: mentoring
+    groupId: mentoring-service
   naverapi:
     clientId:
     clientSecret:

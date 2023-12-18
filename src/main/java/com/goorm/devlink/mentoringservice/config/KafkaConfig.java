@@ -1,7 +1,5 @@
 package com.goorm.devlink.mentoringservice.config;
 
-
-import com.goorm.devlink.mentoringservice.config.properties.KafkaConfigProperties;
 import com.goorm.devlink.mentoringservice.config.properties.vo.KafkaConfigVo;
 import com.goorm.devlink.mentoringservice.dto.NotifyDto;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +8,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -24,18 +21,11 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
-@EnableConfigurationProperties(KafkaConfigProperties.class)
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-    private final KafkaConfigProperties kafkaConfigProperties;
+    private final KafkaConfigVo kafkaConfigVo;
 
-    @Bean
-    public KafkaConfigVo kafkaConfigVo(){
-        return new KafkaConfigVo(kafkaConfigProperties.getTopicName(),
-                kafkaConfigProperties.getGroupId(),
-                kafkaConfigProperties.getBootstrapServerUrl());
-    }
 
     // Producer Config
     @Bean
@@ -50,10 +40,10 @@ public class KafkaConfig {
     @Bean
     public Map<String,Object> producerConfigs() {
         Map<String,Object> configurations = new HashMap<>();
-        configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaConfigVo().getBootstrapServerUrl());
+        configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaConfigVo.getBootstrapServerUrl());
         configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        configurations.put(CommonClientConfigs.GROUP_ID_CONFIG,kafkaConfigVo().getGroupId());
+        configurations.put(CommonClientConfigs.GROUP_ID_CONFIG,kafkaConfigVo.getGroupId());
         return configurations;
     }
 
@@ -73,10 +63,10 @@ public class KafkaConfig {
     @Bean
     public Map<String,Object> consumerConfigs(){
         Map<String,Object> configurations = new HashMap<>();
-        configurations.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaConfigVo().getBootstrapServerUrl());
+        configurations.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaConfigVo.getBootstrapServerUrl());
         configurations.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configurations.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        configurations.put(CommonClientConfigs.GROUP_ID_CONFIG,kafkaConfigVo().getGroupId());
+        configurations.put(CommonClientConfigs.GROUP_ID_CONFIG,kafkaConfigVo.getGroupId());
         configurations.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");// ??
         return configurations;
 
