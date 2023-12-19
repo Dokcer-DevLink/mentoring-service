@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 
 @Builder
@@ -16,15 +17,43 @@ public class NotifyDto implements Serializable {
     }
 
 
+    private String notificationUuid;
     private String senderUuid;
-    private String receiverUuid;
+    private String recipientUuid;
+    private String applyUuid;
+    private String postUuid;
     private NotifyType notifyType;
 
-    public static NotifyDto getInstance(MentoringApply mentoringApply,NotifyType notifyType){
+    public static NotifyDto getInstanceApply(MentoringApply mentoringApply){
         return NotifyDto.builder()
+                .notificationUuid(UUID.randomUUID().toString())
+                .applyUuid(mentoringApply.getApplyUuid())
+                .postUuid(mentoringApply.getPostUuid())
                 .senderUuid(mentoringApply.getFromUuid())
-                .receiverUuid(mentoringApply.getTargetUuid())
-                .notifyType(notifyType)
+                .recipientUuid(mentoringApply.getTargetUuid())
+                .notifyType(NotifyType.MENTORING_APPLY)
+                .build();
+    }
+
+    public static NotifyDto getInstanceAccept(MentoringApply mentoringApply){
+        return NotifyDto.builder()
+                .notificationUuid(UUID.randomUUID().toString())
+                .applyUuid(mentoringApply.getApplyUuid())
+                .postUuid(mentoringApply.getPostUuid())
+                .senderUuid(mentoringApply.getTargetUuid())
+                .recipientUuid(mentoringApply.getFromUuid())
+                .notifyType(NotifyType.MENTORING_ACCEPT)
+                .build();
+    }
+
+    public static NotifyDto getInstanceReject(MentoringApply mentoringApply){
+        return NotifyDto.builder()
+                .notificationUuid(UUID.randomUUID().toString())
+                .applyUuid(mentoringApply.getApplyUuid())
+                .postUuid(mentoringApply.getPostUuid())
+                .senderUuid(mentoringApply.getTargetUuid())
+                .recipientUuid(mentoringApply.getFromUuid())
+                .notifyType(NotifyType.MENTORING_REJECT)
                 .build();
     }
 

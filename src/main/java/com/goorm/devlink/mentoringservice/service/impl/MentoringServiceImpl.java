@@ -37,7 +37,7 @@ public class MentoringServiceImpl implements MentoringService {
     public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
         MentoringApply mentoringApply = modelMapperUtil.convertToMentoringApply(mentoringApplyDto);
         mentoringApplyRepository.save(mentoringApply);
-        publishMessageToKafkaTopic(NotifyDto.getInstance(mentoringApply, NotifyDto.NotifyType.MENTORING_APPLY));
+        publishMessageToKafkaTopic(NotifyDto.getInstanceApply(mentoringApply));
         return mentoringApply.getApplyUuid();
     }
 
@@ -71,7 +71,7 @@ public class MentoringServiceImpl implements MentoringService {
         mentoringApply.updateAcceptStatus(); // 2. Mentoring Apply Accept로 상태 변경
         Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
         mentoringRepository.save(mentoring);
-        publishMessageToKafkaTopic(NotifyDto.getInstance(mentoringApply, NotifyDto.NotifyType.MENTORING_ACCEPT));
+        publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply));
 
         return mentoring.getMentoringUuid();
     }
@@ -83,7 +83,7 @@ public class MentoringServiceImpl implements MentoringService {
                     throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); }); // 1. Mentoring Apply 조회
         mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
         mentoringApplyRepository.save(mentoringApply);
-        publishMessageToKafkaTopic(NotifyDto.getInstance(mentoringApply, NotifyDto.NotifyType.MENTORING_REJECT));
+        publishMessageToKafkaTopic(NotifyDto.getInstanceReject(mentoringApply));
         return mentoringApply.getApplyUuid();
     }
 
