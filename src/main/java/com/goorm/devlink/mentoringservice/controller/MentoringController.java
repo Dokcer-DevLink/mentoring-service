@@ -2,9 +2,9 @@ package com.goorm.devlink.mentoringservice.controller;
 
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
-import com.goorm.devlink.mentoringservice.record.NaverClova;
-import com.goorm.devlink.mentoringservice.record.NaverClovaApi;
-import com.goorm.devlink.mentoringservice.record.NaverClovaFactory;
+import com.goorm.devlink.mentoringservice.naverapi.NaverClovaType;
+import com.goorm.devlink.mentoringservice.naverapi.NaverClovaApi;
+import com.goorm.devlink.mentoringservice.naverapi.NaverClovaFactory;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
@@ -90,11 +90,12 @@ public class MentoringController {
 
     // 레코드 기록 추가하기
     @PostMapping("/api/mentoring/record")
-    public String getRecordSummary(@RequestBody RecordRequest recordRequest ) {
-            NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClova.STT);
+    public ResponseEntity<RecordResponse> getRecordSummary(@RequestBody RecordRequest recordRequest ) {
+            String mentoringUuid = recordRequest.getMentoringUuid();
+            if( mentoringUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getMentoringUuidEmptyMessage()); }
+            NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClovaType.SPEECH);
             String content = naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
-            naverClovaApi = naverClovaFactory.getInstance(NaverClova.SUMMARY);
-            return naverClovaApi.sendDataToNaverClova(content);
+            return new ResponseEntity<>(RecordResponse.getInstance(mentoringUuid,content),HttpStatus.OK);
     }
 
 

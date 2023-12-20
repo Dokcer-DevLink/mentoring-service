@@ -32,15 +32,11 @@ data:
     bootstrapServerUrl: localhost:9092
     groupId: mentoring-service
   naverapi:
-    clientId: 13xmn5ujvc
-    clientSecret: 9KYdZ5DUWaujJ4uaJPOPnnKGMusMMbTYbHW4LK4y
-    stt:
-      url: https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor
-      contentType: application/octet-stream
-      fileUrl: /Users/kangmingu/Desktop/Goorm_Project/mentoring-service/RecordFile.mp3
-    summary:
-      url: https://naveropenapi.apigw.ntruss.com/text-summary/v1/summarize
+    speech:
+      secret: d6eb83a6eecb4d81b6c7148868d3f3d6
+      invokeUrl: https://clovaspeech-gw.ncloud.com/external/v1/6563/4e43217aedb02c1859629c68b99d067ce6540bef8ece960f32ce893a34534340/recognizer/upload
       contentType: application/json
+      fileUrl: /Users/kangmingu/Desktop/Goorm_Project/mentoring-service/speech_files/
 
 
 
