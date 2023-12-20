@@ -32,8 +32,8 @@ data:
     bootstrapServerUrl: localhost:9092
     groupId: mentoring-service
   naverapi:
-    clientId:
-    clientSecret:
+    clientId: 13xmn5ujvc
+    clientSecret: 9KYdZ5DUWaujJ4uaJPOPnnKGMusMMbTYbHW4LK4y
     stt:
       url: https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor
       contentType: application/octet-stream
