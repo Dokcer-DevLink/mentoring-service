@@ -40,6 +40,9 @@ public class Mentoring extends BaseTimeEntity{
     @Column(name = "on_offline")
     @Enumerated(EnumType.STRING)
     private OnOffline onOffline;
+    @Lob
+    @Column(name = "record_content")
+    private String recordContent;
 
 
     public static Mentoring convertToMentoring(MentoringApply mentoringApply){

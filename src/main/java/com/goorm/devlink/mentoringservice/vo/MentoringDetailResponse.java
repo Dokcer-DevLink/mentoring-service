@@ -18,5 +18,7 @@ public class MentoringDetailResponse {
     private MentoringStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String recordContent;
+
 
 }

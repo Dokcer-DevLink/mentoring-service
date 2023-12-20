@@ -95,6 +95,7 @@ public class MentoringController {
             if( mentoringUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getMentoringUuidEmptyMessage()); }
             NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClovaType.SPEECH);
             String content = naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
+            mentoringService.saveRecordContent(mentoringUuid,content);
             return new ResponseEntity<>(RecordResponse.getInstance(mentoringUuid,content),HttpStatus.OK);
     }
 

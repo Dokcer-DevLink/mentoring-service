@@ -96,6 +96,15 @@ public class MentoringServiceImpl implements MentoringService {
         return mentoringSlice.map(mentoring -> modelMapperUtil.convertToMentoringSimpleResponse(mentoring));
     }
 
+    @Override
+    public void saveRecordContent(String mentoringUuid, String content) {
+        Mentoring mentoring = Optional.ofNullable(mentoringRepository.findMentoringByMentoringUuid(mentoringUuid))
+                .orElseThrow(() ->{
+                    throw new NoSuchElementException(messageUtil.getMentoringUuidNoSuchMessage(mentoringUuid));});
+        mentoring.setRecordContent(content);
+        mentoringRepository.save(mentoring);
+    }
+
     private void publishMessageToKafkaTopic(NotifyDto notifyDto){
         try {
             kafkaTemplate.send(kafkaConfigVo.getTopicName(),notifyDto).get();
