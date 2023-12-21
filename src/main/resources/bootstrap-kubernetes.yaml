@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: kubernetes
+  cloud:
+    config:
+      enabled: false
+    kubernetes:
+      enabled: true
+      config:
+        enabled: true
+        name: mentoring-config
+        namespace: default
+      loadbalancer:
+        mode: service

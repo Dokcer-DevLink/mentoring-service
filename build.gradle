@@ -27,6 +27,15 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+bootJar {
+	archiveFileName = 'mentoring-service.jar'
+}
+
+ext {
+	set('springCloudVersion', "2021.0.8")
 }
 
 dependencies {
@@ -45,17 +54,33 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-
 	// QueryDSL
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-core:${queryDslVersion}"
 
 	// Naver Speech
-	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
-	implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.1'
-	implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+	implementation 'org.apache.httpcomponents:httpmime'
+	implementation 'org.apache.httpcomponents:httpclient'
+	implementation 'com.google.code.gson:gson'
 
+	// SpringCloud 및 Kubernetes
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-client-all'
+	implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+
+
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('test') {

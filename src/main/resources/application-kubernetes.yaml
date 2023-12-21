@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mentoring-service
+  config:
+    activate:
+      on-profile: kubernetes
+  datasource:
+    url: jdbc:mysql://${DB_SERVER}:${DB_PORT:3306}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+      use_sql_comments: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+data:
+  kafka:
+    topicName: kafka-mentoring
+    bootstrapServerUrl: localhost:9092
+    groupId: mentoring-service
+  naverapi:
+    speech:
+      secret: ${NAVER_SECRET_KEY}
+      invokeUrl: https://clovaspeech-gw.ncloud.com/external/v1/6563/4e43217aedb02c1859629c68b99d067ce6540bef8ece960f32ce893a34534340/recognizer/upload
+      contentType: application/json
+      fileUrl:
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    enabled: false
