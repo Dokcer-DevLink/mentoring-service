@@ -16,9 +16,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@SequenceGenerator(
+        name="MENTORING_SEQ_GENERATOR",
+        sequenceName = "MENTORING_SEQ",
+        initialValue = 1, allocationSize = 1
+)
 public class Mentoring extends BaseTimeEntity{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+                    generator = "MENTORING_SEQ_GENERATOR")
+    @Column(name = "mentoring_id")
     Long id;
     @Column(name = "mentoring_uuid", unique=true)
     private String mentoringUuid;
