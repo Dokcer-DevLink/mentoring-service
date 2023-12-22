@@ -24,8 +24,8 @@ spring:
 
 data:
   kafka:
-    topicName: kafka-mentoring
-    bootstrapServerUrl: localhost:9092
+    topicName: ${KAFKA_TOPIC_NAME} # kafka-mentoring
+    bootstrapServerUrl: ${KAFKA_SERVICE}:9092 # localhost:9092
     groupId: mentoring-service
   naverapi:
     speech:
