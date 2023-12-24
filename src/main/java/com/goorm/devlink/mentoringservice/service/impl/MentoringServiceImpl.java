@@ -17,6 +17,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -34,19 +36,8 @@ public class MentoringServiceImpl implements MentoringService {
     private final KafkaConfigVo kafkaConfigVo;
 
     @Override
-    public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
-        MentoringApply mentoringApply = modelMapperUtil.convertToMentoringApply(mentoringApplyDto);
-        mentoringApplyRepository.save(mentoringApply);
-        publishMessageToKafkaTopic(NotifyDto.getInstanceApply(mentoringApply));
-        return mentoringApply.getApplyUuid();
-    }
-
-    @Override
     public MentoringDetailResponse findMentoringDetail(String mentoringUuid) {
-        Mentoring mentoring = Optional.ofNullable(mentoringRepository.findMentoringByMentoringUuid(mentoringUuid))
-                .orElseThrow(() -> {
-                    throw new NoSuchElementException(messageUtil.getMentoringUuidNoSuchMessage(mentoringUuid)); });
-        return modelMapperUtil.convertToMentoringDetailResponse(mentoring);
+        return modelMapperUtil.convertToMentoringDetailResponse(findMentoring(mentoringUuid));
     }
 
     @Override
@@ -64,30 +55,6 @@ public class MentoringServiceImpl implements MentoringService {
     }
 
     @Override
-    public String doMentoringAcceptProcess(String applyUuid) {
-        MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
-                .orElseThrow( () -> {
-                    throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); }); // 1. Mentoring Apply 조회
-        mentoringApply.updateAcceptStatus(); // 2. Mentoring Apply Accept로 상태 변경
-        Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
-        mentoringRepository.save(mentoring);
-        publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply));
-
-        return mentoring.getMentoringUuid();
-    }
-
-    @Override
-    public String doMentoringRejectProcess(String applyUuid) {
-        MentoringApply mentoringApply = Optional.ofNullable(mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid))
-                .orElseThrow( () -> {
-                    throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); }); // 1. Mentoring Apply 조회
-        mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
-        mentoringApplyRepository.save(mentoringApply);
-        publishMessageToKafkaTopic(NotifyDto.getInstanceReject(mentoringApply));
-        return mentoringApply.getApplyUuid();
-    }
-
-    @Override
     public Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid,MentoringType mentoringType) {
         PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
         Slice<Mentoring> mentoringSlice = (mentoringType.equals(MentoringType.MENTOR)) ?
@@ -97,12 +64,42 @@ public class MentoringServiceImpl implements MentoringService {
     }
 
     @Override
+    @Transactional
+    public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
+        MentoringApply mentoringApply = modelMapperUtil.convertToMentoringApply(mentoringApplyDto);
+        mentoringApplyRepository.save(mentoringApply);
+        publishMessageToKafkaTopic(NotifyDto.getInstanceApply(mentoringApply));
+        return mentoringApply.getApplyUuid();
+    }
+
+    @Override
+    @Transactional
     public void saveRecordContent(String mentoringUuid, String content) {
-        Mentoring mentoring = Optional.ofNullable(mentoringRepository.findMentoringByMentoringUuid(mentoringUuid))
-                .orElseThrow(() ->{
-                    throw new NoSuchElementException(messageUtil.getMentoringUuidNoSuchMessage(mentoringUuid));});
+        Mentoring mentoring = findMentoring(mentoringUuid);
         mentoring.setRecordContent(content);
         mentoringRepository.save(mentoring);
+    }
+
+    @Override
+    @Transactional
+    public String doMentoringAcceptProcess(String applyUuid) {
+        MentoringApply mentoringApply = findMentoringApply(applyUuid); // 1. Mentoring Apply 조회
+        mentoringApply.updateAcceptStatus(); // 2. MentoringApply ACCEPT로 상태 변경
+        Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
+        mentoringRepository.save(mentoring);
+        publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply));
+
+        return mentoring.getMentoringUuid();
+    }
+
+    @Override
+    @Transactional
+    public String doMentoringRejectProcess(String applyUuid) {
+        MentoringApply mentoringApply = findMentoringApply(applyUuid); // 1. Mentoring Apply 조회
+        mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
+        mentoringApplyRepository.save(mentoringApply);
+        publishMessageToKafkaTopic(NotifyDto.getInstanceReject(mentoringApply));
+        return mentoringApply.getApplyUuid();
     }
 
     private void publishMessageToKafkaTopic(NotifyDto notifyDto){
@@ -111,5 +108,16 @@ public class MentoringServiceImpl implements MentoringService {
         }
         catch (InterruptedException e) { throw new RuntimeException(e);}
         catch (ExecutionException e) { throw new RuntimeException(e); }
+    }
+
+    private Mentoring findMentoring(String mentoringUuid){
+        return mentoringRepository.findMentoringByMentoringUuid(mentoringUuid).orElseThrow(() ->{
+                    throw new NoSuchElementException(messageUtil.getMentoringUuidNoSuchMessage(mentoringUuid));});
+    }
+
+    private MentoringApply findMentoringApply(String applyUuid){
+        return mentoringApplyRepository.findMentoringApplyByApplyUuid(applyUuid)
+                .orElseThrow( () -> {
+                    throw new NoSuchElementException(messageUtil.getApplyUuidNoSuchMessage(applyUuid)); });
     }
 }
