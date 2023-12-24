@@ -63,12 +63,32 @@ public class MentoringServiceImpl implements MentoringService {
         return mentoringSlice.map(mentoring -> modelMapperUtil.convertToMentoringSimpleResponse(mentoring));
     }
 
+    // 멘토링 신청
     @Override
     @Transactional
     public String applyMentoring(MentoringApplyDto mentoringApplyDto) {
         MentoringApply mentoringApply = modelMapperUtil.convertToMentoringApply(mentoringApplyDto);
         mentoringApplyRepository.save(mentoringApply);
         publishMessageToKafkaTopic(NotifyDto.getInstanceApply(mentoringApply));
+        return mentoringApply.getApplyUuid();
+    }
+
+    // 멘토링 수락
+    @Override
+    public String doMentoringAcceptProcess(String applyUuid) {
+        MentoringApply mentoringApply = findMentoringApply(applyUuid); // 1. Mentoring Apply 조회
+        mentoringApply.updateAcceptStatus(); // 2. MentoringApply ACCEPT로 상태 변경
+        return createMentoring(mentoringApply);
+    }
+
+    // 멘토링 거절
+    @Override
+    @Transactional
+    public String doMentoringRejectProcess(String applyUuid) {
+        MentoringApply mentoringApply = findMentoringApply(applyUuid); // 1. Mentoring Apply 조회
+        mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
+        mentoringApplyRepository.save(mentoringApply);
+        publishMessageToKafkaTopic(NotifyDto.getInstanceReject(mentoringApply));
         return mentoringApply.getApplyUuid();
     }
 
@@ -80,34 +100,21 @@ public class MentoringServiceImpl implements MentoringService {
         mentoringRepository.save(mentoring);
     }
 
-    @Override
-    @Transactional
-    public String doMentoringAcceptProcess(String applyUuid) {
-        MentoringApply mentoringApply = findMentoringApply(applyUuid); // 1. Mentoring Apply 조회
-        mentoringApply.updateAcceptStatus(); // 2. MentoringApply ACCEPT로 상태 변경
-        Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
-        mentoringRepository.save(mentoring);
-        publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply));
-
-        return mentoring.getMentoringUuid();
-    }
-
-    @Override
-    @Transactional
-    public String doMentoringRejectProcess(String applyUuid) {
-        MentoringApply mentoringApply = findMentoringApply(applyUuid); // 1. Mentoring Apply 조회
-        mentoringApply.updateRejectStatus(); // 2. Mentoring Apply Reject로 상태 변경
-        mentoringApplyRepository.save(mentoringApply);
-        publishMessageToKafkaTopic(NotifyDto.getInstanceReject(mentoringApply));
-        return mentoringApply.getApplyUuid();
-    }
-
     private void publishMessageToKafkaTopic(NotifyDto notifyDto){
         try {
             kafkaTemplate.send(kafkaConfigVo.getTopicName(),notifyDto).get();
         }
         catch (InterruptedException e) { throw new RuntimeException(e);}
         catch (ExecutionException e) { throw new RuntimeException(e); }
+    }
+
+    @Transactional
+    private String createMentoring(MentoringApply mentoringApply){
+        Mentoring mentoring = Mentoring.convertToMentoring(mentoringApply); // 3. Mentoring 생성
+        mentoringRepository.save(mentoring);
+        publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply));
+
+        return mentoring.getMentoringUuid();
     }
 
     private Mentoring findMentoring(String mentoringUuid){
