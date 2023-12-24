@@ -32,8 +32,7 @@ public class MentoringController {
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         String applyUuid =
                 mentoringService.applyMentoring(MentoringApplyDto.getInstance(mentoringApplyRequest, userUuid));
-        return new ResponseEntity<>(ApplyMessageResponse.getInstance(applyUuid,messageUtil.getApplyCompleteMessage()),
-                HttpStatus.OK);
+        return ResponseEntity.ok(ApplyMessageResponse.getInstance(applyUuid,messageUtil.getApplyCompleteMessage()));
 
     }
 
@@ -42,7 +41,7 @@ public class MentoringController {
     public ResponseEntity<Slice<ApplyPostResponse>> getApplySendMentoringList(@RequestHeader("userUuid") String userUuid){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         Slice<ApplyPostResponse> sendApplies = mentoringService.findApplySendMentoringList(userUuid);
-        return new ResponseEntity<>(sendApplies,HttpStatus.OK);
+        return ResponseEntity.ok(sendApplies);
     }
 
     // 받은 멘토링 제안 리스트 조회 ( Slice )
@@ -58,8 +57,8 @@ public class MentoringController {
     public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
         String mentoringUuid = mentoringService.doMentoringAcceptProcess(applyUuid);
-        return new ResponseEntity<>(MentoringMessageResponse.getInstance(mentoringUuid,
-                messageUtil.getMentoringCreateMessage()), HttpStatus.OK);
+        return ResponseEntity
+                .ok(MentoringMessageResponse.getInstance(mentoringUuid,messageUtil.getMentoringCreateMessage()));
     }
 
     // 멘토링 신청 거절
@@ -67,8 +66,8 @@ public class MentoringController {
     public ResponseEntity<ApplyMessageResponse> doMentoringRejectProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
         String rejectUuid = mentoringService.doMentoringRejectProcess(applyUuid);
-        return new ResponseEntity<>(ApplyMessageResponse.getInstance(rejectUuid,
-                messageUtil.getMentoringRejectMessage()), HttpStatus.OK);
+        return ResponseEntity
+                .ok(ApplyMessageResponse.getInstance(rejectUuid, messageUtil.getMentoringRejectMessage()));
     }
 
     // 멘토링 상세 조회
@@ -76,7 +75,7 @@ public class MentoringController {
     public ResponseEntity<MentoringDetailResponse> getMentoringDetail(@RequestParam String mentoringUuid){
         if( mentoringUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getMentoringUuidEmptyMessage()); }
         MentoringDetailResponse mentoringDetailResponse = mentoringService.findMentoringDetail(mentoringUuid);
-        return new ResponseEntity<>(mentoringDetailResponse,HttpStatus.OK);
+        return ResponseEntity.ok(mentoringDetailResponse);
     }
 
     // 나의 멘토링 리스트 조회
@@ -85,7 +84,7 @@ public class MentoringController {
                                                                              @RequestParam MentoringType mentoringType){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         Slice<MentoringSimpleResponse> myMentoringList = mentoringService.findMyMentoringList(userUuid,mentoringType);
-        return new ResponseEntity<>(myMentoringList,HttpStatus.OK);
+        return ResponseEntity.ok(myMentoringList);
     }
 
     // 레코드 기록 추가하기
@@ -96,7 +95,7 @@ public class MentoringController {
             NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClovaType.SPEECH);
             String content = naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
             mentoringService.saveRecordContent(mentoringUuid,content);
-            return new ResponseEntity<>(RecordResponse.getInstance(mentoringUuid,content),HttpStatus.OK);
+            return ResponseEntity.ok(RecordResponse.getInstance(mentoringUuid,content));
     }
 
 
