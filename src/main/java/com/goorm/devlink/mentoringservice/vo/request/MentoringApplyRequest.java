@@ -1,6 +1,8 @@
-package com.goorm.devlink.mentoringservice.vo;
+package com.goorm.devlink.mentoringservice.vo.request;
 
 
+import com.goorm.devlink.mentoringservice.vo.MentoringType;
+import com.goorm.devlink.mentoringservice.vo.OnOffline;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;

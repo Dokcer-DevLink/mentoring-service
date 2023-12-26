@@ -1,6 +1,8 @@
-package com.goorm.devlink.mentoringservice.vo;
+package com.goorm.devlink.mentoringservice.vo.response;
 
 import com.goorm.devlink.mentoringservice.entity.Mentoring;
+import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
+import com.goorm.devlink.mentoringservice.vo.OnOffline;
 import lombok.Getter;
 import lombok.Setter;
 

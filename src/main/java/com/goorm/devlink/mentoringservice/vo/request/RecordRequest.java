@@ -1,4 +1,4 @@
-package com.goorm.devlink.mentoringservice.vo;
+package com.goorm.devlink.mentoringservice.vo.request;
 
 
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.goorm.devlink.mentoringservice.dto;
 
 
-import com.goorm.devlink.mentoringservice.vo.MentoringApplyRequest;
+import com.goorm.devlink.mentoringservice.vo.request.MentoringApplyRequest;
 import com.goorm.devlink.mentoringservice.vo.MentoringApplyStatus;
 import com.goorm.devlink.mentoringservice.vo.MentoringType;
 import com.goorm.devlink.mentoringservice.vo.OnOffline;

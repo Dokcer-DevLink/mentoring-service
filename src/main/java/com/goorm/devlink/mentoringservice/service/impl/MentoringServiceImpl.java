@@ -11,6 +11,10 @@ import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.util.ModelMapperUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
+import com.goorm.devlink.mentoringservice.vo.response.ApplyPostResponse;
+import com.goorm.devlink.mentoringservice.vo.response.ApplyProfileResponse;
+import com.goorm.devlink.mentoringservice.vo.response.MentoringDetailResponse;
+import com.goorm.devlink.mentoringservice.vo.response.MentoringSimpleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -20,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 
@@ -55,7 +58,7 @@ public class MentoringServiceImpl implements MentoringService {
     }
 
     @Override
-    public Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid,MentoringType mentoringType) {
+    public Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid, MentoringType mentoringType) {
         PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
         Slice<Mentoring> mentoringSlice = (mentoringType.equals(MentoringType.MENTOR)) ?
                 mentoringRepository.findMyMentoringListByMentorUuid(userUuid):

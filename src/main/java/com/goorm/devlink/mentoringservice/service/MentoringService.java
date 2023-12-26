@@ -2,9 +2,11 @@ package com.goorm.devlink.mentoringservice.service;
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.vo.*;
+import com.goorm.devlink.mentoringservice.vo.response.ApplyPostResponse;
+import com.goorm.devlink.mentoringservice.vo.response.ApplyProfileResponse;
+import com.goorm.devlink.mentoringservice.vo.response.MentoringDetailResponse;
+import com.goorm.devlink.mentoringservice.vo.response.MentoringSimpleResponse;
 import org.springframework.data.domain.Slice;
-
-import java.util.List;
 
 public interface MentoringService {
 

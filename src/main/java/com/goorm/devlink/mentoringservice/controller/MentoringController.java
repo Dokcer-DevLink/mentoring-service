@@ -8,6 +8,9 @@ import com.goorm.devlink.mentoringservice.naverapi.NaverClovaFactory;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
+import com.goorm.devlink.mentoringservice.vo.request.MentoringApplyRequest;
+import com.goorm.devlink.mentoringservice.vo.request.RecordRequest;
+import com.goorm.devlink.mentoringservice.vo.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
@@ -18,7 +21,6 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class MentoringController {
 
     private final MentoringService mentoringService;
