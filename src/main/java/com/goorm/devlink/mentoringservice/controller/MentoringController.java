@@ -2,6 +2,7 @@ package com.goorm.devlink.mentoringservice.controller;
 
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
+import com.goorm.devlink.mentoringservice.dto.MentoringStatusDto;
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaType;
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaApi;
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaFactory;
@@ -9,6 +10,7 @@ import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
 import com.goorm.devlink.mentoringservice.vo.request.MentoringApplyRequest;
+import com.goorm.devlink.mentoringservice.vo.request.MentoringStatusRequest;
 import com.goorm.devlink.mentoringservice.vo.request.RecordRequest;
 import com.goorm.devlink.mentoringservice.vo.response.*;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +74,18 @@ public class MentoringController {
         String rejectUuid = mentoringService.doMentoringRejectProcess(applyUuid);
         return ResponseEntity
                 .ok(ApplyMessageResponse.getInstance(rejectUuid, messageUtil.getMentoringRejectMessage()));
+    }
+
+    /** 멘토링 상태 변경 **/
+    @PostMapping("api/mentoring/status")
+    public ResponseEntity<MentoringMessageResponse> updateMentoringStatus(
+                                                      @RequestBody @Valid MentoringStatusRequest mentoringStatusRequest,
+                                                      @RequestHeader("userUuid") String userUuid) {
+        if(userUuid.isEmpty()) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
+        String mentoringUuid =
+                mentoringService.updateMentoringStatus(MentoringStatusDto.getInstance(mentoringStatusRequest, userUuid));
+        return ResponseEntity.ok(MentoringMessageResponse.getInstance(
+                mentoringUuid, messageUtil.getMentoringStatusUpdateMessage()));
     }
 
     /** 멘토링 상세 조회 **/

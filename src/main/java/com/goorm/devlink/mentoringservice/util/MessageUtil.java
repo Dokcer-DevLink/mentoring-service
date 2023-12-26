@@ -14,6 +14,9 @@ public class MessageUtil {
     public String getApplyCompleteMessage(){ return getMessage("response.apply.complete"); }
     public String getMentoringCreateMessage(){ return getMessage("response.mentoring.create");}
     public String getMentoringRejectMessage() { return getMessage("response.mentoring.reject");}
+    public String getMentoringStatusUpdateMessage() {
+        return getMessage("response.mentoring.update.status");
+    }
     public String getUserUuidEmptyMessage() {
         return getMessage("request.empty.userUuid");
     }
@@ -26,7 +29,9 @@ public class MessageUtil {
         return getMessage("request.nosuch.mentoringUuid", new String[] {mentoringUuid});
     }
     public String getMentoringCreateErrorMessage() {
-        return getMessage("runtime.error.mentoring");}
+        return getMessage("runtime.error.mentoring.create");}
+    public String getMentoringStatusUpdateErrorMessage() {
+        return getMessage("runtime.error.mentoring.update");}
     public String getKafkaNotifyErrorMessage() {
         return getMessage("runtime.error.kafka.notification");}
     public String getProfileConnectionErrorMessage() {
@@ -38,5 +43,7 @@ public class MessageUtil {
     private String getMessage(String messageCode, String[] parameters){
         return messageSource.getMessage(messageCode,parameters, Locale.KOREA);
     }
+
+
 
 }

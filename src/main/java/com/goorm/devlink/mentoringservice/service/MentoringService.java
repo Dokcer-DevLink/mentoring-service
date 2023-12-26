@@ -1,6 +1,7 @@
 package com.goorm.devlink.mentoringservice.service;
 
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
+import com.goorm.devlink.mentoringservice.dto.MentoringStatusDto;
 import com.goorm.devlink.mentoringservice.vo.*;
 import com.goorm.devlink.mentoringservice.vo.response.ApplyPostResponse;
 import com.goorm.devlink.mentoringservice.vo.response.ApplyProfileResponse;
@@ -24,4 +25,6 @@ public interface MentoringService {
 
     Slice<MentoringSimpleResponse> findMyMentoringList(String userUuid, MentoringType mentoringType);
     void saveRecordContent(String mentoringUuid, String content);
+
+    String updateMentoringStatus(MentoringStatusDto mentoringStatusDto);
 }

@@ -51,6 +51,9 @@ public class Mentoring extends BaseTimeEntity{
     @Column(name = "record_content")
     private String recordContent;
 
+    public void updateStatus(MentoringStatus status){
+        this.status = status;
+    }
 
     public static Mentoring convertToMentoring(MentoringApply mentoringApply, String mentoringUuid){
         String mentorUuidValue = mentoringApply.getTargetUuid();
