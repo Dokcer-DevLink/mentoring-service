@@ -1,6 +1,7 @@
 package com.goorm.devlink.mentoringservice.exception;
 
 
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -51,6 +52,12 @@ public class ControllerExceptionAdvice {
                                                                                   HttpServletRequest request){
         return new ResponseEntity<>(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<ErrorResult> feignExceptionHandler(FeignException exception,HttpServletRequest request){
+        return ResponseEntity.internalServerError()
+                .body(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()));
     }
 
     private List<String> getMethodArgumentNotValidMessage(MethodArgumentNotValidException ex){

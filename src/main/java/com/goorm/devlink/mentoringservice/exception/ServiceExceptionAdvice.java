@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice(basePackages = "com.goorm.devlink.mentoringservice.service")
-
 public class ServiceExceptionAdvice {
 
     @ExceptionHandler(RuntimeException.class)
@@ -26,4 +25,5 @@ public class ServiceExceptionAdvice {
         return ResponseEntity.internalServerError()
                 .body(ErrorResult.getInstance(exception.getMessage(), request.getRequestURI().toString()));
     }
+
 }
