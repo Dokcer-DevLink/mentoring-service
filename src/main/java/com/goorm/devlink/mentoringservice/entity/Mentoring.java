@@ -35,8 +35,8 @@ public class Mentoring extends BaseTimeEntity{
     private String menteeUuid;
     @Column(name = "start_time")
     private LocalDateTime startTime;
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
+    @Column(name = "unit_time_count")
+    private int unitTimeCount;
     @Column(name = "mentoring_place")
     private String mentoringPlace;
     @Column(name = "post_uuid")
@@ -65,7 +65,7 @@ public class Mentoring extends BaseTimeEntity{
                 .mentorUuid(mentorUuidValue)
                 .menteeUuid(menteeUuidValue)
                 .startTime(mentoringApply.getStartTime())
-                .endTime(mentoringApply.getEndTime())
+                .unitTimeCount(mentoringApply.getUnitTimeCount())
                 .mentoringPlace(mentoringApply.getMentoringPlace())
                 .postUuid(mentoringApply.getPostUuid())
                 .status(MentoringStatus.ONGOING)

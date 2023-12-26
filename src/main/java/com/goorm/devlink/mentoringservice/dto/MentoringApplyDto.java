@@ -22,7 +22,7 @@ public class MentoringApplyDto {
     private String mentoringPlace;
     private OnOffline onOffline;
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private int unitTimeCount;
     private MentoringApplyStatus status;
 
     public static MentoringApplyDto getInstance(MentoringApplyRequest mentoringApplyRequest, String userUuid){
@@ -32,7 +32,7 @@ public class MentoringApplyDto {
                 .mentoringPlace(mentoringApplyRequest.getMentoringPlace())
                 .onOffline(mentoringApplyRequest.getOnOffline())
                 .startTime(mentoringApplyRequest.getStartTime())
-                .endTime(mentoringApplyRequest.getEndTime())
+                .unitTimeCount(mentoringApplyRequest.getUnitTimeCount())
                 .targetType(mentoringApplyRequest.getTargetType())
                 .status(MentoringApplyStatus.WAITING)
                 .fromUuid(userUuid)

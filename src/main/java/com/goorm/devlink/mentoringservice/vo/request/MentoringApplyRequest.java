@@ -25,7 +25,7 @@ public class MentoringApplyRequest {
     @NotNull(message = "{request.required}")
     private LocalDateTime startTime;
     @NotNull(message = "{request.required}")
-    private LocalDateTime endTime;
+    private int unitTimeCount;
 
 
 }

@@ -25,8 +25,8 @@ public class MentoringApply extends BaseTimeEntity {
     private String targetUuid;
     @Column(name = "start_time")
     private LocalDateTime startTime;
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
+    @Column(name = "unit_time_count")
+    private int unitTimeCount;
     @Column(name = "mentoring_place")
     private String mentoringPlace;
     @Column(name = "post_uuid")

@@ -19,7 +19,7 @@ public class MentoringSimpleResponse {
     private OnOffline onOffline;
     private MentoringStatus status;
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private int unitTimeCount;
 
 
 }
