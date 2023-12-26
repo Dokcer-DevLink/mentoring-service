@@ -56,9 +56,11 @@ public class MentoringController {
 
     /** 멘토린 신청 수락 **/
     @GetMapping("/api/mentoring/accept")
-    public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestParam String applyUuid){
+    public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestHeader String userUuid,
+                                                                             @RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
-        String mentoringUuid = mentoringService.doMentoringAcceptProcess(applyUuid);
+        if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
+        String mentoringUuid = mentoringService.doMentoringAcceptProcess(userUuid, applyUuid);
         return ResponseEntity
                 .ok(MentoringMessageResponse.getInstance(mentoringUuid,messageUtil.getMentoringCreateMessage()));
     }

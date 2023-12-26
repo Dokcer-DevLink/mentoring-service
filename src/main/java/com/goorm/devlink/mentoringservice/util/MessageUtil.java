@@ -25,6 +25,13 @@ public class MessageUtil {
     public String getMentoringUuidNoSuchMessage(String mentoringUuid) {
         return getMessage("request.nosuch.mentoringUuid", new String[] {mentoringUuid});
     }
+    public String getMentoringCreateErrorMessage() {
+        return getMessage("runtime.error.mentoring");}
+    public String getKafkaNotifyErrorMessage() {
+        return getMessage("runtime.error.kafka.notification");}
+    public String getProfileConnectionErrorMessage() {
+        return getMessage("runtime.error.profile.connection"); }
+
     private String getMessage(String messageCode){
         return messageSource.getMessage(messageCode,new String[]{}, Locale.KOREA);
     }

@@ -52,7 +52,7 @@ public class Mentoring extends BaseTimeEntity{
     private String recordContent;
 
 
-    public static Mentoring convertToMentoring(MentoringApply mentoringApply){
+    public static Mentoring convertToMentoring(MentoringApply mentoringApply, String mentoringUuid){
         String mentorUuidValue = mentoringApply.getTargetUuid();
         String menteeUuidValue = mentoringApply.getFromUuid();
 
@@ -61,7 +61,7 @@ public class Mentoring extends BaseTimeEntity{
             menteeUuidValue = mentoringApply.getTargetUuid();
         }
         return Mentoring.builder()
-                .mentoringUuid(UUID.randomUUID().toString())
+                .mentoringUuid(mentoringUuid)
                 .mentorUuid(mentorUuidValue)
                 .menteeUuid(menteeUuidValue)
                 .startTime(mentoringApply.getStartTime())

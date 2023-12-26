@@ -18,7 +18,7 @@ public interface MentoringService {
 
     Slice<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid);
 
-    String doMentoringAcceptProcess(String applyUuid);
+    String doMentoringAcceptProcess(String userUuid, String applyUuid);
 
     String doMentoringRejectProcess(String applyUuid);
 

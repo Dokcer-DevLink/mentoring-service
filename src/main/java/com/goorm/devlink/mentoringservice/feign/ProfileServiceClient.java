@@ -10,11 +10,11 @@ public interface ProfileServiceClient {
 
     /** 스케줄 생성 **/
     @PostMapping("/api/myprofile/schedule")
-    public ResponseEntity<Void> setUserCalendarSchedule(@RequestHeader("userUuid") String userUuid,
-                                                        @RequestBody ScheduleCreateRequest scheduleCreateRequest);
+    public ResponseEntity<Void> createCalendarSchedule(@RequestHeader("userUuid") String userUuid,
+                                                       @RequestBody ScheduleCreateRequest scheduleCreateRequest);
     /** 스케줄 취소 **/
     @DeleteMapping("/api/myprofile/schedule")
-    public ResponseEntity<Void> deleteUserCalendarSchedule(@RequestHeader("userUuid") String userUuid,
-                                                           @RequestParam("mentoringUuid") String mentoringUuid);
+    public ResponseEntity<Void> cancelCalendarSchedule(@RequestHeader("userUuid") String userUuid,
+                                                       @RequestParam("mentoringUuid") String mentoringUuid);
 
 }
