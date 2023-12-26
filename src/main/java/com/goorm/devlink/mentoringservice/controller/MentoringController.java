@@ -27,7 +27,7 @@ public class MentoringController {
     private final MessageUtil messageUtil;
     private final NaverClovaFactory naverClovaFactory;
 
-    // 멘토링 신청
+    /** 멘토링 신청 **/
     @PostMapping("/api/mentoring/apply")
     public ResponseEntity<ApplyMessageResponse> applyMentoring(@RequestBody @Valid MentoringApplyRequest mentoringApplyRequest,
                                                                @RequestHeader("userUuid") String userUuid){
@@ -38,7 +38,7 @@ public class MentoringController {
 
     }
 
-    // 보낸 멘토링 제안 리스트 조회 ( Slice )
+    /** 보낸 멘토링 제안 리스트 조회 ( Slice ) **/
     @GetMapping("/api/mentoring/send")
     public ResponseEntity<Slice<ApplyPostResponse>> getApplySendMentoringList(@RequestHeader("userUuid") String userUuid){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
@@ -46,7 +46,7 @@ public class MentoringController {
         return ResponseEntity.ok(sendApplies);
     }
 
-    // 받은 멘토링 제안 리스트 조회 ( Slice )
+    /** 받은 멘토링 제안 리스트 조회 ( Slice ) **/
     @GetMapping("/api/mentoring/receive")
     public ResponseEntity<Slice<ApplyProfileResponse>> getApplyMentoringList(@RequestHeader("userUuid") String userUuid){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
@@ -54,7 +54,7 @@ public class MentoringController {
         return new ResponseEntity<>(receiveApplies,HttpStatus.OK);
     }
 
-    // 멘토린 신청 수락
+    /** 멘토린 신청 수락 **/
     @GetMapping("/api/mentoring/accept")
     public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
@@ -63,7 +63,7 @@ public class MentoringController {
                 .ok(MentoringMessageResponse.getInstance(mentoringUuid,messageUtil.getMentoringCreateMessage()));
     }
 
-    // 멘토링 신청 거절
+    /**  멘토링 신청 거절 **/
     @GetMapping("/api/mentoring/reject")
     public ResponseEntity<ApplyMessageResponse> doMentoringRejectProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
@@ -72,7 +72,7 @@ public class MentoringController {
                 .ok(ApplyMessageResponse.getInstance(rejectUuid, messageUtil.getMentoringRejectMessage()));
     }
 
-    // 멘토링 상세 조회
+    /** 멘토링 상세 조회 **/
     @GetMapping("/api/mentoring")
     public ResponseEntity<MentoringDetailResponse> getMentoringDetail(@RequestParam String mentoringUuid){
         if( mentoringUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getMentoringUuidEmptyMessage()); }
@@ -80,7 +80,7 @@ public class MentoringController {
         return ResponseEntity.ok(mentoringDetailResponse);
     }
 
-    // 나의 멘토링 리스트 조회
+    /** 나의 멘토링 리스트 조회 **/
     @GetMapping("/api/mentoring/my")
     public ResponseEntity<Slice<MentoringSimpleResponse>> getMyMentoringList(@RequestHeader("userUuid") String userUuid,
                                                                              @RequestParam MentoringType mentoringType){
@@ -89,7 +89,7 @@ public class MentoringController {
         return ResponseEntity.ok(myMentoringList);
     }
 
-    // 레코드 기록 추가하기
+    /** 레코드 기록 추가하기 **/
     @PostMapping("/api/mentoring/record")
     public ResponseEntity<RecordResponse> getRecordSummary(@RequestBody RecordRequest recordRequest ) {
             String mentoringUuid = recordRequest.getMentoringUuid();

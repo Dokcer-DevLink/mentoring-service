@@ -12,7 +12,6 @@ public interface ProfileServiceClient {
     @PostMapping("/api/myprofile/schedule")
     public ResponseEntity<Void> setUserCalendarSchedule(@RequestHeader("userUuid") String userUuid,
                                                         @RequestBody ScheduleCreateRequest scheduleCreateRequest);
-
     /** 스케줄 취소 **/
     @DeleteMapping("/api/myprofile/schedule")
     public ResponseEntity<Void> deleteUserCalendarSchedule(@RequestHeader("userUuid") String userUuid,
