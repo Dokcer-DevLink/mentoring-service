@@ -37,6 +37,14 @@ public class MessageUtil {
     public String getProfileConnectionErrorMessage() {
         return getMessage("runtime.error.profile.connection"); }
 
+    public String getRecordContentErrorMessage() {
+        return getMessage("request.content.record");
+    }
+
+    public String getRecordTypeErrorMessage() {
+        return getMessage("request.type.record");
+    }
+
     private String getMessage(String messageCode){
         return messageSource.getMessage(messageCode,new String[]{}, Locale.KOREA);
     }
