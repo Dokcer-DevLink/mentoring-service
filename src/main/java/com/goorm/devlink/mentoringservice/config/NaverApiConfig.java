@@ -6,6 +6,7 @@ import com.goorm.devlink.mentoringservice.config.properties.vo.NaverSpeechConfig
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaFactory;
 import com.goorm.devlink.mentoringservice.naverapi.vo.NestRequestEntity;
 import com.goorm.devlink.mentoringservice.naverapi.vo.SpeechHttpHeader;
+import com.goorm.devlink.mentoringservice.util.AwsUtil;
 import com.goorm.devlink.mentoringservice.util.HttpConnectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,7 +23,7 @@ public class NaverApiConfig {
     @Bean
     public NaverSpeechConfigVo naverApiConfigVo(){
         return new NaverSpeechConfigVo(naverSpeechApiProperties.getSecret(),naverSpeechApiProperties.getContentType(),
-                naverSpeechApiProperties.getInvokeUrl() ,naverSpeechApiProperties.getFileUrl());
+                naverSpeechApiProperties.getInvokeUrl() );
     }
 
     @Bean
@@ -38,8 +39,8 @@ public class NaverApiConfig {
 
     @Bean
     public NaverClovaFactory naverClovaFactory(HttpConnectionUtil httpConnectionUtil, NaverSpeechConfigVo naverSpeechConfigVo,
-                                                NestRequestEntity nestRequestEntity ){
-        return new NaverClovaFactory(httpConnectionUtil, naverSpeechConfigVo,nestRequestEntity);
+                                               NestRequestEntity nestRequestEntity, AwsUtil awsUtil){
+        return new NaverClovaFactory(httpConnectionUtil, naverSpeechConfigVo,nestRequestEntity,awsUtil);
     }
 
 

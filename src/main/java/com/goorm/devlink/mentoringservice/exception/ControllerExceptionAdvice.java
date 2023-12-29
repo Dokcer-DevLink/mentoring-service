@@ -23,36 +23,43 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ErrorResult> missingRequestHeaderExceptionHandler(MissingRequestHeaderException exception,
                                                                             HttpServletRequest request){
-        return new ResponseEntity<>(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()),
-                HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest()
+                .body(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()));
     }
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResult> noSuchElementExceptionHandler(NoSuchElementException exception,
                                                                      HttpServletRequest request){
-        return new ResponseEntity<>(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()),
-                HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest()
+                .body(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResult> methodArgumentNotValidException(MethodArgumentNotValidException exception,
                                                                        HttpServletRequest request){
-        return new ResponseEntity<>(ErrorResult.getInstance(getMethodArgumentNotValidMessage(exception),
-                request.getRequestURL().toString()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest().body(ErrorResult.getInstance(getMethodArgumentNotValidMessage(exception),
+                request.getRequestURL().toString()));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResult> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException exception,
                                                                               HttpServletRequest request){
-        return new ResponseEntity<>(ErrorResult.getInstance(exception.getMessage(),
-                request.getRequestURL().toString()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest()
+                .body(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResult> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException exception,
+    public ResponseEntity<ErrorResult> argumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException exception,
                                                                                   HttpServletRequest request){
-        return new ResponseEntity<>(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()),
-                HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest()
+                .body(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResult> illegalArgumentExceptionHandler(IllegalArgumentException exception, HttpServletRequest request){
+        return ResponseEntity.badRequest()
+                .body(ErrorResult.getInstance(exception.getMessage(),request.getRequestURL().toString()));
+    }
+
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ErrorResult> feignExceptionHandler(FeignException exception,HttpServletRequest request){

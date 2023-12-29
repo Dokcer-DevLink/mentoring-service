@@ -19,6 +19,14 @@ public class NestRequestEntity {
     private String forbiddens;
     private Diarization diarization;
 
+    private Sed sed;
+
+    public Sed getSed() {
+        return sed;
+    }
+
+    public void setSed(Sed sed) { this.sed = sed; }
+
     public String getLanguage() {
         return language;
     }

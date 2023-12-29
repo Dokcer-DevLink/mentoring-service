@@ -5,12 +5,12 @@ import com.goorm.devlink.mentoringservice.config.properties.vo.NaverSpeechConfig
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaApi;
 import com.goorm.devlink.mentoringservice.naverapi.vo.JsonSpeechVo;
 import com.goorm.devlink.mentoringservice.naverapi.vo.NestRequestEntity;
-import com.goorm.devlink.mentoringservice.naverapi.vo.SpeechHttpHeader;
+import com.goorm.devlink.mentoringservice.util.AwsUtil;
 import com.goorm.devlink.mentoringservice.util.HttpConnectionUtil;
+import com.goorm.devlink.mentoringservice.vo.S3RecordVo;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
-import java.io.File;
 import java.util.UUID;
 
 
@@ -20,20 +20,24 @@ public class NaverClovaSpeech implements NaverClovaApi {
     private final HttpConnectionUtil httpConnectionUtil;
     private final NaverSpeechConfigVo naverSpeechConfigVo;
     private final NestRequestEntity nestRequestEntity;
+    private final AwsUtil awsUtil;
 
     @Override
-    public String sendDataToNaverClova(String encoding) {
-        String response = sendVoiceFileToClovaSpeech(encoding);
+    public String sendDataToNaverClova(S3RecordVo s3RecordVo) {
+        String response = sendVoiceFileToClovaSpeech(s3RecordVo);
         JsonSpeechVo jsonSpeechVo = JsonSpeechVo.getInstance(response);
-        if(!jsonSpeechVo.isSucceeded()) { throw new RuntimeException(); }
+        if(!jsonSpeechVo.isSucceeded()) { throw new RuntimeException(); } // 에러처리!!
         return parsingResponse(jsonSpeechVo);
 
     }
 
-    private String sendVoiceFileToClovaSpeech(String encoding){
-        String fileUrl = generateFileUrl(naverSpeechConfigVo.getFileUrl());
-        File voiceFile = httpConnectionUtil.convertEncodingToFile(encoding,fileUrl);
-        HttpEntity httpEntity = httpConnectionUtil.createHttpEntity(voiceFile, nestRequestEntity);
+    private String pushFileInS3Bucket(S3RecordVo s3RecordVo){
+        return awsUtil.saveRecordInS3Bucket(s3RecordVo);
+    }
+
+    private String sendVoiceFileToClovaSpeech(S3RecordVo s3RecordVo){
+        String fileUrl = pushFileInS3Bucket(s3RecordVo);
+        HttpEntity httpEntity = httpConnectionUtil.createHttpEntity(fileUrl, nestRequestEntity);
         HttpPost httpPost = httpConnectionUtil.createHttpPost(naverSpeechConfigVo.getInvokeUrl(),
                 naverSpeechConfigVo.getHeaders(), httpEntity);
         return httpConnectionUtil.executeHttpPost(httpPost);

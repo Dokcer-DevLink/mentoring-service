@@ -15,7 +15,6 @@ public class NaverSpeechApiProperties {
     private final String secret;
     private final String invokeUrl;
     private final String contentType;
-    private final String fileUrl;
 
 
 }

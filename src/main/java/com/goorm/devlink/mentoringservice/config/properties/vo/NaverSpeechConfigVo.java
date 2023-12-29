@@ -13,14 +13,12 @@ public class NaverSpeechConfigVo {
     private final String secret;
     private final String contentType;
     private final String invokeUrl;
-    private final String fileUrl;
     private final Header[] headers;
 
-    public NaverSpeechConfigVo(String secret, String contentType, String invokeUrl, String fileUrl) {
+    public NaverSpeechConfigVo(String secret, String contentType, String invokeUrl) {
         this.secret = secret;
         this.contentType = contentType;
         this.invokeUrl = invokeUrl;
-        this.fileUrl = fileUrl;
 
         headers = new Header[] {
                 new BasicHeader("Accept", contentType),

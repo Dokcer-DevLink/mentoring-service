@@ -107,13 +107,22 @@ public class MentoringController {
 
     /** 레코드 기록 추가하기 **/
     @PostMapping("/api/mentoring/record")
-    public ResponseEntity<RecordResponse> getRecordSummary(@RequestBody RecordRequest recordRequest ) {
+    public ResponseEntity<RecordResponse> getRecordSummary(@RequestBody @Valid RecordRequest recordRequest ) {
             String mentoringUuid = recordRequest.getMentoringUuid();
             if( mentoringUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getMentoringUuidEmptyMessage()); }
-            NaverClovaApi naverClovaApi = naverClovaFactory.getInstance(NaverClovaType.SPEECH);
-            String content = naverClovaApi.sendDataToNaverClova(recordRequest.getContent());
-            mentoringService.saveRecordContent(mentoringUuid,content);
-            return ResponseEntity.ok(RecordResponse.getInstance(mentoringUuid,content));
+
+            checkRecordValid(recordRequest.getContent());
+            S3RecordVo s3RecordVo = S3RecordVo.getInstance(recordRequest.getContent(),mentoringUuid);
+            String result = naverClovaFactory.getInstance(NaverClovaType.SPEECH).sendDataToNaverClova(s3RecordVo);
+            mentoringService.saveRecordContent(mentoringUuid,result);
+            return ResponseEntity.ok(RecordResponse.getInstance(mentoringUuid,result));
+    }
+
+    private void checkRecordValid(String encodingRecord){
+        if(S3RecordVo.isNotValidContents(encodingRecord)) {
+            throw new IllegalArgumentException(messageUtil.getRecordContentErrorMessage()); }
+        if(S3RecordVo.isNotValidType(encodingRecord)) {
+            throw new IllegalArgumentException(messageUtil.getRecordTypeErrorMessage()); }
     }
 
 

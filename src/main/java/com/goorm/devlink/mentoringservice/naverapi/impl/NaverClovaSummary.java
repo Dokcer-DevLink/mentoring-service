@@ -3,6 +3,7 @@ package com.goorm.devlink.mentoringservice.naverapi.impl;
 import com.goorm.devlink.mentoringservice.config.properties.vo.NaverSpeechConfigVo;
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaApi;
 import com.goorm.devlink.mentoringservice.util.HttpConnectionUtil;
+import com.goorm.devlink.mentoringservice.vo.S3RecordVo;
 import lombok.RequiredArgsConstructor;
 
 
@@ -13,7 +14,7 @@ public class NaverClovaSummary implements NaverClovaApi {
     private final NaverSpeechConfigVo naverSpeechConfigVo;
 
     @Override
-    public String sendDataToNaverClova(String content) {
+    public String sendDataToNaverClova(S3RecordVo s3RecordVo) {
 //        System.out.println("============ Naver Summary ================");
 //
 //        HttpURLConnection conn = httpConnectionUtil.getHttpUrlConnection(naverApiConfigVo.getSummary().getUrl(),

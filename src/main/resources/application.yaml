@@ -40,6 +40,18 @@ data:
       invokeUrl: https://clovaspeech-gw.ncloud.com/external/v1/6563/4e43217aedb02c1859629c68b99d067ce6540bef8ece960f32ce893a34534340/recognizer/upload
       contentType: application/json
       fileUrl: /Users/kangmingu/Desktop/Goorm_Project/mentoring-service/speech_files/
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 eureka:
   instance:
