@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: mentoring-service
+  messages:
+    basename: messages, errors
   config:
     activate:
       on-profile: kubernetes
