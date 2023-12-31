@@ -18,14 +18,15 @@ public class MentoringApplyRequest {
     private String targetUuid;
     @NotNull(message = "{request.required}")
     private MentoringType targetType;
-    @NotBlank(message = "{request.required}")
-    private String mentoringPlace;
     @NotNull(message = "{request.required}")
     private OnOffline onOffline;
     @NotNull(message = "{request.required}")
     private LocalDateTime startTime;
     @NotNull(message = "{request.required}")
     private int unitTimeCount;
+
+    private String mentoringPlace;
+
 
 
 }

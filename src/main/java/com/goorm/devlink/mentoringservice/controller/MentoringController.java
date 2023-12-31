@@ -4,7 +4,6 @@ package com.goorm.devlink.mentoringservice.controller;
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.dto.MentoringStatusDto;
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaType;
-import com.goorm.devlink.mentoringservice.naverapi.NaverClovaApi;
 import com.goorm.devlink.mentoringservice.naverapi.NaverClovaFactory;
 import com.goorm.devlink.mentoringservice.service.MentoringService;
 import com.goorm.devlink.mentoringservice.util.MessageUtil;
