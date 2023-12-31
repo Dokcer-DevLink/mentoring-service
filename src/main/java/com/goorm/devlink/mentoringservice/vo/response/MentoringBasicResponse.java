@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class MentoringDetailResponse {
+public class MentoringBasicResponse {
     private String mentoringUuid;
     private String mentorUuid;
     private String menteeUuid;
@@ -19,7 +19,6 @@ public class MentoringDetailResponse {
     private MentoringStatus status;
     private LocalDateTime startTime;
     private int unitTimeCount;
-    private String recordContent;
 
 
 }
