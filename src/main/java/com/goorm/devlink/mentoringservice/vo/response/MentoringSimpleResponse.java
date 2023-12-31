@@ -1,25 +1,19 @@
 package com.goorm.devlink.mentoringservice.vo.response;
 
-import com.goorm.devlink.mentoringservice.entity.Mentoring;
-import com.goorm.devlink.mentoringservice.vo.MentoringStatus;
-import com.goorm.devlink.mentoringservice.vo.OnOffline;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
+@Builder
 @Getter
 @Setter
 public class MentoringSimpleResponse {
     private String mentoringUuid;
-    private String mentorUuid;
-    private String menteeUuid;
-    private String mentoringPlace;
-    private String postUuid;
-    private OnOffline onOffline;
-    private MentoringStatus status;
-    private LocalDateTime startTime;
-    private int unitTimeCount;
 
-
+    public static MentoringSimpleResponse getInstance(String mentoringUuid){
+        return MentoringSimpleResponse.builder()
+                .mentoringUuid(mentoringUuid)
+                .build();
+    }
 }

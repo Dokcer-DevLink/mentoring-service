@@ -5,7 +5,7 @@ import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.entity.Mentoring;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.vo.response.MentoringDetailResponse;
-import com.goorm.devlink.mentoringservice.vo.response.MentoringSimpleResponse;
+import com.goorm.devlink.mentoringservice.vo.response.MentoringBasicResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -25,9 +25,9 @@ public class ModelMapperUtil {
         return modelMapper.map(mentoring, MentoringDetailResponse.class);
     }
 
-    public MentoringSimpleResponse convertToMentoringSimpleResponse(Mentoring mentoring){
+    public MentoringBasicResponse convertToMentoringSimpleResponse(Mentoring mentoring){
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper.map(mentoring, MentoringSimpleResponse.class);
+        return modelMapper.map(mentoring, MentoringBasicResponse.class);
     }
 
 

@@ -30,12 +30,12 @@ public class MentoringController {
 
     /** 멘토링 신청 **/
     @PostMapping("/api/mentoring/apply")
-    public ResponseEntity<ApplyMessageResponse> applyMentoring(@RequestBody @Valid MentoringApplyRequest mentoringApplyRequest,
-                                                               @RequestHeader("userUuid") String userUuid){
+    public ResponseEntity<ApplySimpleResponse> applyMentoring(@RequestBody @Valid MentoringApplyRequest mentoringApplyRequest,
+                                                              @RequestHeader("userUuid") String userUuid){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         String applyUuid =
                 mentoringService.applyMentoring(MentoringApplyDto.getInstance(mentoringApplyRequest, userUuid));
-        return ResponseEntity.ok(ApplyMessageResponse.getInstance(applyUuid,messageUtil.getApplyCompleteMessage()));
+        return ResponseEntity.ok(ApplySimpleResponse.getInstance(applyUuid));
 
     }
 
@@ -57,34 +57,33 @@ public class MentoringController {
 
     /** 멘토린 신청 수락 **/
     @GetMapping("/api/mentoring/accept")
-    public ResponseEntity<MentoringMessageResponse> doMentoringAcceptProcess(@RequestHeader String userUuid,
-                                                                             @RequestParam String applyUuid){
+    public ResponseEntity<MentoringSimpleResponse> doMentoringAcceptProcess(@RequestHeader String userUuid,
+                                                                            @RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         String mentoringUuid = mentoringService.doMentoringAcceptProcess(userUuid, applyUuid);
         return ResponseEntity
-                .ok(MentoringMessageResponse.getInstance(mentoringUuid,messageUtil.getMentoringCreateMessage()));
+                .ok(MentoringSimpleResponse.getInstance(mentoringUuid));
     }
 
     /**  멘토링 신청 거절 **/
     @GetMapping("/api/mentoring/reject")
-    public ResponseEntity<ApplyMessageResponse> doMentoringRejectProcess(@RequestParam String applyUuid){
+    public ResponseEntity<ApplySimpleResponse> doMentoringRejectProcess(@RequestParam String applyUuid){
         if( applyUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getApplyUuidEmptyMessage()); }
         String rejectUuid = mentoringService.doMentoringRejectProcess(applyUuid);
         return ResponseEntity
-                .ok(ApplyMessageResponse.getInstance(rejectUuid, messageUtil.getMentoringRejectMessage()));
+                .ok(ApplySimpleResponse.getInstance(rejectUuid));
     }
 
     /** 멘토링 상태 변경 **/
     @PostMapping("api/mentoring/status")
-    public ResponseEntity<MentoringMessageResponse> updateMentoringStatus(
+    public ResponseEntity<MentoringSimpleResponse> updateMentoringStatus(
                                                       @RequestBody @Valid MentoringStatusRequest mentoringStatusRequest,
                                                       @RequestHeader("userUuid") String userUuid) {
         if(userUuid.isEmpty()) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
         String mentoringUuid =
                 mentoringService.updateMentoringStatus(MentoringStatusDto.getInstance(mentoringStatusRequest, userUuid));
-        return ResponseEntity.ok(MentoringMessageResponse.getInstance(
-                mentoringUuid, messageUtil.getMentoringStatusUpdateMessage()));
+        return ResponseEntity.ok(MentoringSimpleResponse.getInstance(mentoringUuid));
     }
 
     /** 멘토링 상세 조회 **/
@@ -97,10 +96,10 @@ public class MentoringController {
 
     /** 나의 멘토링 리스트 조회 **/
     @GetMapping("/api/mentoring/my")
-    public ResponseEntity<Slice<MentoringSimpleResponse>> getMyMentoringList(@RequestHeader("userUuid") String userUuid,
-                                                                             @RequestParam MentoringType mentoringType){
+    public ResponseEntity<Slice<MentoringBasicResponse>> getMyMentoringList(@RequestHeader("userUuid") String userUuid,
+                                                                            @RequestParam MentoringType mentoringType){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
-        Slice<MentoringSimpleResponse> myMentoringList = mentoringService.findMyMentoringList(userUuid,mentoringType);
+        Slice<MentoringBasicResponse> myMentoringList = mentoringService.findMyMentoringList(userUuid,mentoringType);
         return ResponseEntity.ok(myMentoringList);
     }
 
