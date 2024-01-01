@@ -35,13 +35,12 @@ public class ApplyProfileResponse {
                 .address(profileCard.getAddress())
                 .stacks(profileCard.getStacks())
                 .build();
-
-
     }
 
     public static ProfileSimpleCard findPostResponse(List<ProfileSimpleCard> profileResponses, String userUuid){
         return profileResponses.stream()
-                .filter( profileResponse -> profileResponse.getUserUuid().equals(userUuid)).findFirst().get();
+                .filter( profileResponse -> profileResponse.getUserUuid().equals(userUuid))
+                .findFirst().orElse(ProfileSimpleCard.getInstance());
     }
 
 }

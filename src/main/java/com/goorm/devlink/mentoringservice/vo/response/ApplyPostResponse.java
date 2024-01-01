@@ -40,7 +40,8 @@ public class ApplyPostResponse {
 
     private static MentoringPostResponse findPostResponse(List<MentoringPostResponse> mentoringPostResponses,String postUuid){
         return mentoringPostResponses.stream()
-                .filter(mentoringPostResponse -> mentoringPostResponse.getPostUuid().equals(postUuid)).findFirst().get();
+                .filter(mentoringPostResponse -> mentoringPostResponse.getPostUuid().equals(postUuid))
+                .findFirst().orElse(MentoringPostResponse.getInstance());
 
     }
 
