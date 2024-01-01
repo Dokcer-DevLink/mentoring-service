@@ -58,7 +58,6 @@ public class MentoringServiceImpl implements MentoringService {
     public List<ApplyPostResponse> findApplySendMentoringList(String userUuid) {
         //PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
         List<MentoringApply> mentoringApplies = mentoringApplyRepository.findAllByFromUuidOrderByCreatedDateDesc(userUuid);
-        log.info("mentoringApplies size {}", mentoringApplies.size());
         if(mentoringApplies.size() != 0 ) return getApplyPostResponse(mentoringApplies);
         else return new ArrayList<>();
     }
@@ -201,7 +200,6 @@ public class MentoringServiceImpl implements MentoringService {
     private List<ApplyPostResponse> getApplyPostResponse (List<MentoringApply> mentoringApplies){
         List<String> postUuids = mentoringApplies.stream().map(MentoringApply::getPostUuid).collect(Collectors.toList());
         List<MentoringPostResponse> mentoringPostResponses = postServiceClient.getPostListForMentoring(postUuids);
-        log.info("mentoringPostResponses size {}", mentoringPostResponses.size());
 
         return mentoringApplies.stream()
                 .map(mentoringApply -> ApplyPostResponse.getInstance(mentoringApply,mentoringPostResponses))
