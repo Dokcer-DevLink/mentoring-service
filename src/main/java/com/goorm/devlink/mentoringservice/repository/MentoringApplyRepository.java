@@ -12,6 +12,6 @@ public interface MentoringApplyRepository extends JpaRepository<MentoringApply,L
 
     List<MentoringApply> findAllByFromUuidOrderByCreatedDateDesc(String userUuid);
 
-    Slice<MentoringApply> findMentoringAppliesByTargetUuid(String userUuid, Pageable pageable);
+    List<MentoringApply> findAllByTargetUuidOrderByCreatedDateDesc(String userUuid);
     Optional<MentoringApply> findMentoringApplyByApplyUuid(String applyUuid);
 }

@@ -50,9 +50,9 @@ public class MentoringController {
 
     /** 받은 멘토링 제안 리스트 조회 ( Slice ) **/
     @GetMapping("/api/mentoring/receive")
-    public ResponseEntity<Slice<ApplyProfileResponse>> getApplyMentoringList(@RequestHeader("userUuid") String userUuid){
+    public ResponseEntity<List<ApplyProfileResponse>> getApplyMentoringList(@RequestHeader("userUuid") String userUuid){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
-        Slice<ApplyProfileResponse> receiveApplies = mentoringService.findApplyReceiveMentoringList(userUuid);
+        List<ApplyProfileResponse> receiveApplies = mentoringService.findApplyReceiveMentoringList(userUuid);
         return new ResponseEntity<>(receiveApplies,HttpStatus.OK);
     }
 

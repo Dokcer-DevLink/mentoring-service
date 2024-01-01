@@ -19,7 +19,7 @@ public interface MentoringService {
 
     List<ApplyPostResponse> findApplySendMentoringList(String userUuid);
 
-    Slice<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid);
+    List<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid);
 
     String doMentoringAcceptProcess(String userUuid, String applyUuid);
 

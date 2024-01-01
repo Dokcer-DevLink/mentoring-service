@@ -18,6 +18,7 @@ import com.goorm.devlink.mentoringservice.vo.request.ScheduleCreateRequest;
 import com.goorm.devlink.mentoringservice.vo.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -62,11 +63,14 @@ public class MentoringServiceImpl implements MentoringService {
         else return new ArrayList<>();
     }
 
+    /** 받은 멘토링 신청 내역 **/
     @Override
-    public Slice<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid) {
-        PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
-        Slice<MentoringApply> mentoringApplies = mentoringApplyRepository.findMentoringAppliesByTargetUuid(userUuid,pageRequest);
-        return mentoringApplies.map(mentoringApply -> ApplyProfileResponse.getInstance(mentoringApply.getFromUuid()));
+    public List<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid) {
+        //PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
+        List<MentoringApply> mentoringApplies = mentoringApplyRepository.findAllByTargetUuidOrderByCreatedDateDesc(userUuid);
+        log.info("mentoringApplies {} ", mentoringApplies.size());
+        if(mentoringApplies.size() != 0 ) return getApplyProfileResponse(mentoringApplies);
+        else return new ArrayList<>();
     }
 
     @Override
@@ -199,10 +203,22 @@ public class MentoringServiceImpl implements MentoringService {
     /** POST 서비스 간 통신으로 POST 데이터 가져오기 ( 보낸 멘토링 신청 내역 )**/
     private List<ApplyPostResponse> getApplyPostResponse (List<MentoringApply> mentoringApplies){
         List<String> postUuids = mentoringApplies.stream().map(MentoringApply::getPostUuid).collect(Collectors.toList());
-        List<MentoringPostResponse> mentoringPostResponses = postServiceClient.getPostListForMentoring(postUuids);
+        List<MentoringPostResponse> mentoringPostResponses = postServiceClient.getPostListForMentoring(postUuids).getBody();
 
         return mentoringApplies.stream()
                 .map(mentoringApply -> ApplyPostResponse.getInstance(mentoringApply,mentoringPostResponses))
                 .collect(Collectors.toList());
     }
+
+    /** PROFILE 서비스 간 통신으로 PROFILE 데이터 가져오기 ( 받은 멘토링 신청 내역 )**/
+
+    private List<ApplyProfileResponse> getApplyProfileResponse(List<MentoringApply> mentoringApplies) {
+        List<String> userUuids = mentoringApplies.stream().map(mentoringApply -> mentoringApply.getFromUuid()).collect(Collectors.toList());
+        List<ProfileSimpleCard> profileResponses = profileServiceClient.getMentoringAppliedProfiles(userUuids).getBody();
+
+        return mentoringApplies.stream()
+                .map(mentoringApply -> ApplyProfileResponse.getInstance(mentoringApply,profileResponses))
+                .collect(Collectors.toList());
+    }
+
 }
