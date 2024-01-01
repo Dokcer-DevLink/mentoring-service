@@ -4,9 +4,12 @@ package com.goorm.devlink.mentoringservice.entity;
 import com.goorm.devlink.mentoringservice.vo.MentoringApplyStatus;
 import com.goorm.devlink.mentoringservice.vo.MentoringType;
 import com.goorm.devlink.mentoringservice.vo.OnOffline;
+import com.goorm.devlink.mentoringservice.vo.response.ApplyPostResponse;
+import com.goorm.devlink.mentoringservice.vo.response.MentoringPostResponse;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,4 +49,7 @@ public class MentoringApply extends BaseTimeEntity {
     public void updateAcceptStatus() {   status = MentoringApplyStatus.ACCEPT; }
 
     public void updateApplyStatus(MentoringApplyStatus status){ this.status = status; }
+
+
+
 }

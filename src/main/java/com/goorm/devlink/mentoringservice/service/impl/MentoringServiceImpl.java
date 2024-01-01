@@ -6,6 +6,7 @@ import com.goorm.devlink.mentoringservice.dto.MentoringStatusDto;
 import com.goorm.devlink.mentoringservice.dto.NotifyDto;
 import com.goorm.devlink.mentoringservice.entity.Mentoring;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
+import com.goorm.devlink.mentoringservice.feign.PostServiceClient;
 import com.goorm.devlink.mentoringservice.feign.ProfileServiceClient;
 import com.goorm.devlink.mentoringservice.repository.MentoringApplyRepository;
 import com.goorm.devlink.mentoringservice.repository.MentoringRepository;
@@ -14,12 +15,10 @@ import com.goorm.devlink.mentoringservice.util.MessageUtil;
 import com.goorm.devlink.mentoringservice.util.ModelMapperUtil;
 import com.goorm.devlink.mentoringservice.vo.*;
 import com.goorm.devlink.mentoringservice.vo.request.ScheduleCreateRequest;
-import com.goorm.devlink.mentoringservice.vo.response.ApplyPostResponse;
-import com.goorm.devlink.mentoringservice.vo.response.ApplyProfileResponse;
-import com.goorm.devlink.mentoringservice.vo.response.MentoringDetailResponse;
-import com.goorm.devlink.mentoringservice.vo.response.MentoringBasicResponse;
+import com.goorm.devlink.mentoringservice.vo.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -29,8 +28,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,24 +47,30 @@ public class MentoringServiceImpl implements MentoringService {
     private final KafkaTemplate<String, NotifyDto> kafkaTemplate;
     private final KafkaConfigVo kafkaConfigVo;
     private final ProfileServiceClient profileServiceClient;
+    private final PostServiceClient postServiceClient;
 
     @Override
     public MentoringDetailResponse findMentoringDetail(String mentoringUuid) {
         return modelMapperUtil.convertToMentoringDetailResponse(findMentoring(mentoringUuid));
     }
 
+    /** 보낸 멘토링 신청 내역 **/
     @Override
-    public Slice<ApplyPostResponse> findApplySendMentoringList(String userUuid) {
-        PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
-        Slice<MentoringApply> mentoringApplies = mentoringApplyRepository.findMentoringAppliesByFromUuid(userUuid,pageRequest);
-        return mentoringApplies.map( mentoringApply -> ApplyPostResponse.getInstance(mentoringApply.getPostUuid()));
+    public List<ApplyPostResponse> findApplySendMentoringList(String userUuid) {
+        //PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
+        List<MentoringApply> mentoringApplies = mentoringApplyRepository.findAllByFromUuidOrderByCreatedDateDesc(userUuid);
+        if(mentoringApplies.size() != 0 ) return getApplyPostResponse(mentoringApplies);
+        else return new ArrayList<>();
     }
 
+    /** 받은 멘토링 신청 내역 **/
     @Override
-    public Slice<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid) {
-        PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
-        Slice<MentoringApply> mentoringApplies = mentoringApplyRepository.findMentoringAppliesByTargetUuid(userUuid,pageRequest);
-        return mentoringApplies.map(mentoringApply -> ApplyProfileResponse.getInstance(mentoringApply.getFromUuid()));
+    public List<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid) {
+        //PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
+        List<MentoringApply> mentoringApplies = mentoringApplyRepository.findAllByTargetUuidOrderByCreatedDateDesc(userUuid);
+        log.info("mentoringApplies {} ", mentoringApplies.size());
+        if(mentoringApplies.size() != 0 ) return getApplyProfileResponse(mentoringApplies);
+        else return new ArrayList<>();
     }
 
     @Override
@@ -191,4 +199,26 @@ public class MentoringServiceImpl implements MentoringService {
         if(response.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException(messageUtil.getProfileConnectionErrorMessage());}
     }
+
+    /** POST 서비스 간 통신으로 POST 데이터 가져오기 ( 보낸 멘토링 신청 내역 )**/
+    private List<ApplyPostResponse> getApplyPostResponse (List<MentoringApply> mentoringApplies){
+        List<String> postUuids = mentoringApplies.stream().map(MentoringApply::getPostUuid).collect(Collectors.toList());
+        List<MentoringPostResponse> mentoringPostResponses = postServiceClient.getPostListForMentoring(postUuids).getBody();
+
+        return mentoringApplies.stream()
+                .map(mentoringApply -> ApplyPostResponse.getInstance(mentoringApply,mentoringPostResponses))
+                .collect(Collectors.toList());
+    }
+
+    /** PROFILE 서비스 간 통신으로 PROFILE 데이터 가져오기 ( 받은 멘토링 신청 내역 )**/
+
+    private List<ApplyProfileResponse> getApplyProfileResponse(List<MentoringApply> mentoringApplies) {
+        List<String> userUuids = mentoringApplies.stream().map(mentoringApply -> mentoringApply.getFromUuid()).collect(Collectors.toList());
+        List<ProfileSimpleCard> profileResponses = profileServiceClient.getMentoringAppliedProfiles(userUuids).getBody();
+
+        return mentoringApplies.stream()
+                .map(mentoringApply -> ApplyProfileResponse.getInstance(mentoringApply,profileResponses))
+                .collect(Collectors.toList());
+    }
+
 }
