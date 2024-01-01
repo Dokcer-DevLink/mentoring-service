@@ -9,13 +9,15 @@ import com.goorm.devlink.mentoringservice.vo.response.MentoringDetailResponse;
 import com.goorm.devlink.mentoringservice.vo.response.MentoringBasicResponse;
 import org.springframework.data.domain.Slice;
 
+import java.util.List;
+
 public interface MentoringService {
 
     public String applyMentoring(MentoringApplyDto mentoringApplyDto);
 
     MentoringDetailResponse findMentoringDetail(String mentoringUuid);
 
-    Slice<ApplyPostResponse> findApplySendMentoringList(String userUuid);
+    List<ApplyPostResponse> findApplySendMentoringList(String userUuid);
 
     Slice<ApplyProfileResponse> findApplyReceiveMentoringList(String userUuid);
 

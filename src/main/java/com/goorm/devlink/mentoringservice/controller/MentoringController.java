@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -41,9 +42,9 @@ public class MentoringController {
 
     /** 보낸 멘토링 제안 리스트 조회 ( Slice ) **/
     @GetMapping("/api/mentoring/send")
-    public ResponseEntity<Slice<ApplyPostResponse>> getApplySendMentoringList(@RequestHeader("userUuid") String userUuid){
+    public ResponseEntity<List<ApplyPostResponse>> getApplySendMentoringList(@RequestHeader("userUuid") String userUuid){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
-        Slice<ApplyPostResponse> sendApplies = mentoringService.findApplySendMentoringList(userUuid);
+        List<ApplyPostResponse> sendApplies = mentoringService.findApplySendMentoringList(userUuid);
         return ResponseEntity.ok(sendApplies);
     }
 
