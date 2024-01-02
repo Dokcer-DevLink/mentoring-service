@@ -4,6 +4,7 @@ import com.goorm.devlink.mentoringservice.config.properties.vo.KafkaConfigVo;
 import com.goorm.devlink.mentoringservice.dto.MentoringApplyDto;
 import com.goorm.devlink.mentoringservice.dto.MentoringStatusDto;
 import com.goorm.devlink.mentoringservice.dto.NotifyDto;
+import com.goorm.devlink.mentoringservice.dto.ScheduleDto;
 import com.goorm.devlink.mentoringservice.entity.Mentoring;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import com.goorm.devlink.mentoringservice.feign.PostServiceClient;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -73,13 +75,30 @@ public class MentoringServiceImpl implements MentoringService {
         else return new ArrayList<>();
     }
 
+    /** 나의 멘토링 조회 **/
     @Override
-    public Slice<MentoringBasicResponse> findMyMentoringList(String userUuid, MentoringType mentoringType) {
-        PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
-        Slice<Mentoring> mentoringSlice = (mentoringType.equals(MentoringType.MENTOR)) ?
-                mentoringRepository.findMyMentoringListByMentorUuid(userUuid):
-                mentoringRepository.findMyMentoringListByMenteeUuid(userUuid);
-        return mentoringSlice.map(mentoring -> modelMapperUtil.convertToMentoringSimpleResponse(mentoring));
+    public List<MentoringBasicResponse> findMyMentoringList(String userUuid, MentoringType mentoringType) {
+        //PageRequest pageRequest = PageRequest.of(0,8,Sort.Direction.DESC,"createdDate");
+        return (mentoringType.equals(MentoringType.MENTOR)) ? findMyMenteeList(userUuid) : findMyMentorList(userUuid);
+
+    }
+
+    private List<MentoringBasicResponse> findMyMenteeList(String userUuid){
+        List<Mentoring> myMentoring = mentoringRepository.findMyMentoringListByMentorUuid(userUuid);
+        List<String> menteeList = myMentoring.stream().map(mentoring -> mentoring.getMenteeUuid()).collect(Collectors.toList());
+        List<ProfileSimpleCard> profileMentorList = profileServiceClient.getMentoringAppliedProfiles(menteeList).getBody();
+        return myMentoring.stream()
+                .map(mentoring -> MentoringBasicResponse.getInstance(mentoring, profileMentorList,MentoringType.MENTEE))
+                .collect(Collectors.toList());
+    }
+
+    private List<MentoringBasicResponse> findMyMentorList(String userUuid){
+        List<Mentoring> myMentoring = mentoringRepository.findMyMentoringListByMenteeUuid(userUuid);
+        List<String> mentorList = myMentoring.stream().map(mentoring -> mentoring.getMentorUuid()).collect(Collectors.toList());
+        List<ProfileSimpleCard> profileMenteeList = profileServiceClient.getMentoringAppliedProfiles(mentorList).getBody();
+        return myMentoring.stream()
+                .map(mentoring->MentoringBasicResponse.getInstance(mentoring,profileMenteeList,MentoringType.MENTOR))
+                .collect(Collectors.toList());
     }
 
     /** 멘토링 신청 메소드 **/
@@ -96,8 +115,11 @@ public class MentoringServiceImpl implements MentoringService {
     @Override
     @Transactional
     public String doMentoringAcceptProcess(String userUuid, String applyUuid) {
+        String mentoringUuid = UUID.randomUUID().toString();
+
         MentoringApply mentoringApply = updateMentoringApplyStatus(applyUuid,MentoringApplyStatus.ACCEPT); // 1. MentoringApply 상태 변경
-        String mentoringUuid = createSchedule(userUuid,ScheduleCreateRequest.getInstance(mentoringApply)); // 2. Profile Service 내에 스케줄 생성 ( 서비스 간 통신 )
+        createSchedule(ScheduleDto.getInstanceFrom(mentoringApply,mentoringUuid)); // fromUser 스케줄 생성
+        createSchedule(ScheduleDto.getInstanceTarget(mentoringApply,mentoringUuid)); // targetUser 스케줄 생성
         createMentoring(mentoringApply, mentoringUuid); // 3. 멘토링 생성
         publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply)); // 4. 알림 생성
         return mentoringUuid;
@@ -184,11 +206,14 @@ public class MentoringServiceImpl implements MentoringService {
     }
 
     /** Profile 서비스 스케줄 생성 메소드 **/
-    private String createSchedule(String userUuid, ScheduleCreateRequest profileRequest){
-        ResponseEntity<Void> response = profileServiceClient.createCalendarSchedule(userUuid, profileRequest);
+    private void createSchedule(ScheduleDto scheduleDto){
+        ResponseEntity<Void> response = profileServiceClient.createCalendarSchedule(
+                scheduleDto.getUserUuid(),
+                ScheduleCreateRequest.getInstance(scheduleDto
+                ));
+
         if(response.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException(messageUtil.getProfileConnectionErrorMessage()); }
-        return profileRequest.getMentoringUuid();
     }
 
     /** Profile 서비스 스케줄 취소 메소드 **/

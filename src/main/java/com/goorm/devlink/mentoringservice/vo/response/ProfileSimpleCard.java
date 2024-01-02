@@ -20,4 +20,6 @@ public class ProfileSimpleCard {
     public static ProfileSimpleCard getInstance(){
         return new ProfileSimpleCard();
     }
+
+
 }
