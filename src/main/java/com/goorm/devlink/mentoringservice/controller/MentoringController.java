@@ -97,10 +97,10 @@ public class MentoringController {
 
     /** 나의 멘토링 리스트 조회 **/
     @GetMapping("/api/mentoring/my")
-    public ResponseEntity<Slice<MentoringBasicResponse>> getMyMentoringList(@RequestHeader("userUuid") String userUuid,
+    public ResponseEntity<List<MentoringBasicResponse>> getMyMentoringList(@RequestHeader("userUuid") String userUuid,
                                                                             @RequestParam MentoringType mentoringType){
         if( userUuid.isEmpty() ) { throw new NoSuchElementException(messageUtil.getUserUuidEmptyMessage()); }
-        Slice<MentoringBasicResponse> myMentoringList = mentoringService.findMyMentoringList(userUuid,mentoringType);
+        List<MentoringBasicResponse> myMentoringList = mentoringService.findMyMentoringList(userUuid,mentoringType);
         return ResponseEntity.ok(myMentoringList);
     }
 

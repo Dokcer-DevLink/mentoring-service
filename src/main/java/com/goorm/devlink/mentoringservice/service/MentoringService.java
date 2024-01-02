@@ -25,7 +25,7 @@ public interface MentoringService {
 
     String doMentoringRejectProcess(String applyUuid);
 
-    Slice<MentoringBasicResponse> findMyMentoringList(String userUuid, MentoringType mentoringType);
+    List<MentoringBasicResponse> findMyMentoringList(String userUuid, MentoringType mentoringType);
     void saveRecordContent(String mentoringUuid, String content);
 
     String updateMentoringStatus(MentoringStatusDto mentoringStatusDto);

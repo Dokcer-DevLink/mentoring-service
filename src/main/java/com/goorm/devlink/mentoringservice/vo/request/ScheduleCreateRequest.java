@@ -1,5 +1,6 @@
 package com.goorm.devlink.mentoringservice.vo.request;
 
+import com.goorm.devlink.mentoringservice.dto.ScheduleDto;
 import com.goorm.devlink.mentoringservice.entity.MentoringApply;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,11 +17,11 @@ public class ScheduleCreateRequest {
     private LocalDateTime startTime;
     private int unitTimeCount;
 
-    public static ScheduleCreateRequest getInstance(MentoringApply mentoringApply){
+    public static ScheduleCreateRequest getInstance(ScheduleDto scheduleDto){
         return ScheduleCreateRequest.builder()
-                .mentoringUuid(UUID.randomUUID().toString())
-                .startTime(mentoringApply.getStartTime())
-                .unitTimeCount(mentoringApply.getUnitTimeCount())
+                .mentoringUuid(scheduleDto.getMentoringUuid())
+                .startTime(scheduleDto.getStartTime())
+                .unitTimeCount(scheduleDto.getUnitTimeCount())
                 .build();
     }
 }

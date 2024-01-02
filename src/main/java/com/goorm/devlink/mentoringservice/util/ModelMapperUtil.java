@@ -25,10 +25,7 @@ public class ModelMapperUtil {
         return modelMapper.map(mentoring, MentoringDetailResponse.class);
     }
 
-    public MentoringBasicResponse convertToMentoringSimpleResponse(Mentoring mentoring){
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper.map(mentoring, MentoringBasicResponse.class);
-    }
+
 
 
 
