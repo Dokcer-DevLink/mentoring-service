@@ -9,12 +9,14 @@ import com.goorm.devlink.mentoringservice.util.AwsUtil;
 import com.goorm.devlink.mentoringservice.util.HttpConnectionUtil;
 import com.goorm.devlink.mentoringservice.vo.S3RecordVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
 import java.util.UUID;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class NaverClovaSpeech implements NaverClovaApi {
 
     private final HttpConnectionUtil httpConnectionUtil;
@@ -25,8 +27,9 @@ public class NaverClovaSpeech implements NaverClovaApi {
     @Override
     public String sendDataToNaverClova(S3RecordVo s3RecordVo) {
         String response = sendVoiceFileToClovaSpeech(s3RecordVo);
+        log.info("response {}",response);
         JsonSpeechVo jsonSpeechVo = JsonSpeechVo.getInstance(response);
-        if(!jsonSpeechVo.isSucceeded()) { throw new RuntimeException(); } // 에러처리!!
+        if(!jsonSpeechVo.isSucceeded()) { throw new RuntimeException("네이버 SpeechAPI에서 음성파일 변환에 실패하였습니다."); } // 에러처리!!
         return parsingResponse(jsonSpeechVo);
 
     }

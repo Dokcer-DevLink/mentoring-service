@@ -45,7 +45,7 @@ data:
   naverapi:
     speech:
       secret: ${NAVER_SECRET_KEY}
-      invokeUrl: https://clovaspeech-gw.ncloud.com/external/v1/6563/4e43217aedb02c1859629c68b99d067ce6540bef8ece960f32ce893a34534340/recognizer/upload
+      invokeUrl: https://clovaspeech-gw.ncloud.com/external/v1/6563/4e43217aedb02c1859629c68b99d067ce6540bef8ece960f32ce893a34534340/recognizer/url
       contentType: application/json
       fileUrl:
 
