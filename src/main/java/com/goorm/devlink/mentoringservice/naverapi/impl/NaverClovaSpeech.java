@@ -27,9 +27,10 @@ public class NaverClovaSpeech implements NaverClovaApi {
     @Override
     public String sendDataToNaverClova(S3RecordVo s3RecordVo) {
         String response = sendVoiceFileToClovaSpeech(s3RecordVo);
-        log.info("response {}",response);
         JsonSpeechVo jsonSpeechVo = JsonSpeechVo.getInstance(response);
-        if(!jsonSpeechVo.isSucceeded()) { throw new RuntimeException("네이버 SpeechAPI에서 음성파일 변환에 실패하였습니다."); } // 에러처리!!
+        if(!jsonSpeechVo.isSucceeded()) {
+            log.info("response {}",response);
+            throw new RuntimeException("네이버 SpeechAPI에서 음성파일 변환에 실패하였습니다."); } // 에러처리!!
         return parsingResponse(jsonSpeechVo);
 
     }
