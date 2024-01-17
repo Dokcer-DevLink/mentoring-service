@@ -118,9 +118,10 @@ public class MentoringServiceImpl implements MentoringService {
         String mentoringUuid = UUID.randomUUID().toString();
 
         MentoringApply mentoringApply = updateMentoringApplyStatus(applyUuid,MentoringApplyStatus.ACCEPT); // 1. MentoringApply 상태 변경
+        createMentoring(mentoringApply, mentoringUuid); // 2. 멘토링 생성
+        //3. 스케줄 생성
         createSchedule(ScheduleDto.getInstanceFrom(mentoringApply,mentoringUuid)); // fromUser 스케줄 생성
         createSchedule(ScheduleDto.getInstanceTarget(mentoringApply,mentoringUuid)); // targetUser 스케줄 생성
-        createMentoring(mentoringApply, mentoringUuid); // 3. 멘토링 생성
         publishMessageToKafkaTopic(NotifyDto.getInstanceAccept(mentoringApply)); // 4. 알림 생성
         return mentoringUuid;
     }
